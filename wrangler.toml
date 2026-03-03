@@ -1,0 +1,13 @@
+# Cloudflare Pages – konfigurace pro web-ros
+# Před prvním nasazením: vytvořte KV namespace a doplňte id níže (viz DEPLOY-CLOUDFLARE.md)
+
+name = "web-ros"
+compatibility_date = "2024-01-01"
+pages_build_output_dir = "./dist"
+
+[[kv_namespaces]]
+binding = "HOURS_KV"
+id = "aff72d0779484f4eb9beced7d93de950"
+
+# Heslo do adminu nastavte v Cloudflare Dashboard jako Secret (Settings > Functions > Environment variables > Encrypt)
+# Název proměnné: ADMIN_PASSWORD
