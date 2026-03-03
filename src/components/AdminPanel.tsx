@@ -14,11 +14,15 @@ interface OpeningHours {
   wednesday: string;
   thursday: string;
   friday: string;
+  saturday: string;
+  sunday: string;
   mondayBreak?: string;
   tuesdayBreak?: string;
   wednesdayBreak?: string;
   thursdayBreak?: string;
   fridayBreak?: string;
+  saturdayBreak?: string;
+  sundayBreak?: string;
   note: string;
   closedOffice?: boolean;
   closedReason?: string;
@@ -62,6 +66,10 @@ export function AdminPanel() {
           wednesdayBreak: data.wednesdayBreak ?? "",
           thursdayBreak: data.thursdayBreak ?? "",
           fridayBreak: data.fridayBreak ?? "",
+          saturday: data.saturday ?? "Zavřeno",
+          sunday: data.sunday ?? "Zavřeno",
+          saturdayBreak: data.saturdayBreak ?? "",
+          sundayBreak: data.sundayBreak ?? "",
           closedOffice: data.closedOffice ?? false,
           closedReason: data.closedReason ?? "",
           closedUntil: data.closedUntil ?? "",
@@ -192,6 +200,8 @@ export function AdminPanel() {
                 { key: "wednesday" as const, breakKey: "wednesdayBreak" as const, label: "Středa" },
                 { key: "thursday" as const, breakKey: "thursdayBreak" as const, label: "Čtvrtek" },
                 { key: "friday" as const, breakKey: "fridayBreak" as const, label: "Pátek" },
+                { key: "saturday" as const, breakKey: "saturdayBreak" as const, label: "Sobota" },
+                { key: "sunday" as const, breakKey: "sundayBreak" as const, label: "Neděle" },
               ].map(({ key, breakKey, label }) => {
                 const value = hours[key] ?? "";
                 const breakValue = hours[breakKey] ?? "";

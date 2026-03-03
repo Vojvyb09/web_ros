@@ -66,9 +66,12 @@ async function startServer() {
           wednesday: "7:30 - 15:30",
           thursday: "7:30 - 15:30",
           friday: "7:30 - 12:00",
+          saturday: "Zavřeno",
+          sunday: "Zavřeno",
           note: "* Polední pauza 12:00 - 12:30",
           closedOffice: false,
           closedReason: "",
+          closedUntil: "",
           replacements: []
         });
       }

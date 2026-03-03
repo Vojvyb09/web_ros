@@ -8,11 +8,15 @@ interface OpeningHours {
   wednesday: string;
   thursday: string;
   friday: string;
+  saturday?: string;
+  sunday?: string;
   mondayBreak?: string;
   tuesdayBreak?: string;
   wednesdayBreak?: string;
   thursdayBreak?: string;
   fridayBreak?: string;
+  saturdayBreak?: string;
+  sundayBreak?: string;
   note?: string;
 }
 
@@ -32,6 +36,8 @@ export function Footer() {
     { label: "Středa", value: hours?.wednesday ?? "", break: hours?.wednesdayBreak },
     { label: "Čtvrtek", value: hours?.thursday ?? "", break: hours?.thursdayBreak },
     { label: "Pátek", value: hours?.friday ?? "", break: hours?.fridayBreak },
+    { label: "Sobota", value: hours?.saturday ?? "", break: hours?.saturdayBreak },
+    { label: "Neděle", value: hours?.sunday ?? "", break: hours?.sundayBreak },
   ];
 
   return (

@@ -14,11 +14,15 @@ interface OpeningHours {
   wednesday: string;
   thursday: string;
   friday: string;
+  saturday?: string;
+  sunday?: string;
   mondayBreak?: string;
   tuesdayBreak?: string;
   wednesdayBreak?: string;
   thursdayBreak?: string;
   fridayBreak?: string;
+  saturdayBreak?: string;
+  sundayBreak?: string;
   note: string;
   closedOffice?: boolean;
   closedReason?: string;
@@ -189,6 +193,8 @@ export function OpeningHoursModal() {
                         { day: "Středa", value: hours.wednesday, break: hours.wednesdayBreak },
                         { day: "Čtvrtek", value: hours.thursday, break: hours.thursdayBreak },
                         { day: "Pátek", value: hours.friday, break: hours.fridayBreak },
+                        { day: "Sobota", value: hours.saturday ?? "", break: hours.saturdayBreak },
+                        { day: "Neděle", value: hours.sunday ?? "", break: hours.sundayBreak },
                       ].map(({ day, value, break: breakVal }) => {
                         const isClosed = (value ?? "").trim().toLowerCase() === "zavřeno";
                         const hasBreak = (breakVal ?? "").trim();
