@@ -72,6 +72,7 @@ async function startServer() {
           acceptingPatients: true,
           closedOffice: false,
           closedReason: "",
+          closedFrom: "",
           closedUntil: "",
           replacements: []
         });

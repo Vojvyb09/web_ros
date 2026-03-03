@@ -17,6 +17,13 @@
       "address": "Sokolní "
     }
   ],
+  "savedReplacementDoctors": [
+    {
+      "name": "MUDr.Novák",
+      "contact": "1234567",
+      "address": "Sokolní "
+    }
+  ],
   "mondayBreak": "",
   "tuesdayBreak": "",
   "wednesdayBreak": "",
@@ -24,5 +31,6 @@
   "fridayBreak": "",
   "saturdayBreak": "",
   "sundayBreak": "",
+  "closedFrom": "",
   "closedUntil": ""
 }

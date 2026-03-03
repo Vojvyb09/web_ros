@@ -4,14 +4,14 @@ import { ChevronLeft, ChevronRight, Camera } from "lucide-react";
 import { SectionDivider } from "@/components/SectionDivider";
 import { cn } from "@/lib/utils";
 
-/** Fotky ze složky public/photo (názvy podle vašich souborů) */
+/** Fotky ze složky public/photo – titulky a popisky odpovídají obsahu snímků */
 const images = [
-  { src: "/photo/cekarna.jpg", alt: "Čekárna", title: "Příjemná čekárna", description: "Prostředí navržené pro váš komfort a klid." },
-  { src: "/photo/ordinace_main.jpg", alt: "Ordinace", title: "Hlavní ordinace", description: "Vybavena nejmodernější diagnostickou technikou." },
-  { src: "/photo/pristroj_1.jpg", alt: "Přístroj 1", title: "Špičkové vybavení", description: "OCT a další přístroje pro přesnou diagnostiku." },
-  { src: "/photo/pristorj_2.jpg", alt: "Přístroj 2", title: "Diagnostika", description: "Přesná a šetrná vyšetření." },
-  { src: "/photo/pristroj_3.jpg", alt: "Přístroj 3", title: "Technologie", description: "Nejmodernější přístrojové vybavení." },
-  { src: "/photo/pristroj_4.jpg", alt: "Přístroj 4", title: "Prostředí ordinace", description: "Čisté a moderní prostředí pro vaši péči." },
+  { src: "/photo/cekarna.jpg", alt: "Čekárna", title: "Čekárna", description: "Klidné prostředí, kde na vás počkáme před vyšetřením." },
+  { src: "/photo/ordinace_main.jpg", alt: "Hlavní ordinace", title: "Hlavní ordinace", description: "Prostor pro komplexní oční vyšetření a konzultace." },
+  { src: "/photo/pristroj_1.jpg", alt: "Diagnostický přístroj", title: "Diagnostická technika", description: "Přesné přístroje pro vyšetření předního segmentu oka a zrakové ostrosti." },
+  { src: "/photo/pristorj_2.jpg", alt: "Vyšetřovna", title: "Vyšetřovna", description: "Šetrné a důkladné vyšetření v příjemném prostředí." },
+  { src: "/photo/pristroj_3.jpg", alt: "Oční přístroje", title: "Přístrojové vybavení", description: "Moderní technika pro diagnostiku i sledování průběhu léčby." },
+  { src: "/photo/pristroj_4.jpg", alt: "Ordinace", title: "Ordinace", description: "Čisté a přehledné pracoviště pro vaši oční péči." },
 ];
 
 export function Gallery() {

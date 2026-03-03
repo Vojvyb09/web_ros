@@ -11,6 +11,7 @@ interface OpeningHours {
   sunday?: string;
   closedOffice?: boolean;
   closedReason?: string;
+  closedFrom?: string;
   closedUntil?: string;
   replacements?: unknown[];
 }
@@ -36,18 +37,22 @@ function parseTimeRange(value: string): { start: number; end: number } | null {
 function isOfficeOpenNow(hours: OpeningHours | null): boolean {
   if (!hours) return false;
 
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const closedFromStr = (hours.closedFrom ?? "").trim();
   const closedUntilStr = (hours.closedUntil ?? "").trim();
+  let closedNoticeInEffect = true;
+  if (closedFromStr) {
+    const from = new Date(closedFromStr);
+    from.setHours(0, 0, 0, 0);
+    if (today < from) closedNoticeInEffect = false;
+  }
   if (closedUntilStr) {
     const until = new Date(closedUntilStr);
     until.setHours(0, 0, 0, 0);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    if (today > until) {
-      // closedUntil vypršelo, řídíme se podle dnů
-    } else if (hours.closedOffice && ((hours.closedReason ?? "").trim() || (hours.replacements?.length ?? 0) > 0)) {
-      return false;
-    }
-  } else if (hours.closedOffice && ((hours.closedReason ?? "").trim() || (hours.replacements?.length ?? 0) > 0)) {
+    if (today > until) closedNoticeInEffect = false;
+  }
+  if (closedNoticeInEffect && hours.closedOffice && ((hours.closedReason ?? "").trim() || (hours.replacements?.length ?? 0) > 0)) {
     return false;
   }
 

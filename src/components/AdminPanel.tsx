@@ -28,9 +28,13 @@ interface OpeningHours {
   acceptingPatients?: boolean;
   closedOffice?: boolean;
   closedReason?: string;
-  /** Platné do (datum) – po tomto datu se zobrazí běžné okno. Prázdné = bez automatického zrušení. */
+  /** Platné od (datum) – od kdy se zobrazí oznámení. Prázdné = hned. */
+  closedFrom?: string;
+  /** Platné do (datum) – po tomto datu se zobrazí běžné okno. Prázdné = zrušíte jen ručně. */
   closedUntil?: string;
   replacements?: Replacement[];
+  /** Předvyplnění – seznam doktorů pro výběr v náhradě (ukládají se i nově zadaní). */
+  savedReplacementDoctors?: Replacement[];
 }
 
 export function AdminPanel() {
@@ -75,10 +79,16 @@ export function AdminPanel() {
           closedOffice: data.closedOffice ?? false,
           acceptingPatients: data.acceptingPatients !== false,
           closedReason: data.closedReason ?? "",
+          closedFrom: data.closedFrom ?? "",
           closedUntil: data.closedUntil ?? "",
           replacements: Array.isArray(data.replacements)
             ? data.replacements.map((r: Replacement) => ({ name: r.name ?? "", contact: r.contact ?? "", address: r.address ?? "" }))
             : [],
+          savedReplacementDoctors: Array.isArray(data.savedReplacementDoctors)
+            ? data.savedReplacementDoctors.map((r: Replacement) => ({ name: r.name ?? "", contact: r.contact ?? "", address: r.address ?? "" }))
+            : (Array.isArray(data.replacements) && data.replacements.length > 0
+                ? data.replacements.map((r: Replacement) => ({ name: r.name ?? "", contact: r.contact ?? "", address: r.address ?? "" }))
+                : []),
         });
         setLoading(false);
       })
@@ -105,11 +115,19 @@ export function AdminPanel() {
     }
 
     try {
-      console.log("Ukládám ordinační dobu:", hours);
+      const saved = [...(hours.savedReplacementDoctors ?? [])];
+      const key = (r: Replacement) => `${(r.name ?? "").trim()}|${(r.contact ?? "").trim()}`;
+      for (const r of hours.replacements ?? []) {
+        if (!(r.name ?? "").trim() && !(r.contact ?? "").trim()) continue;
+        const k = key(r);
+        if (!saved.some((s) => key(s) === k)) saved.push({ name: r.name ?? "", contact: r.contact ?? "", address: r.address ?? "" });
+      }
+      const dataToSave = { ...hours, savedReplacementDoctors: saved };
+      console.log("Ukládám ordinační dobu:", dataToSave);
       const res = await fetch("/api/hours", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, data: hours }),
+        body: JSON.stringify({ token, data: dataToSave }),
       });
 
       console.log("Odpověď při ukládání:", res.status);
@@ -300,15 +318,28 @@ export function AdminPanel() {
               </div>
               {hours.closedOffice && (
                 <>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Platné do (datum) – po tomto datu se zobrazí běžné okno, nevyplněno = zrušíte jen ručně</label>
-                    <input
-                      type="date"
-                      value={hours.closedUntil ?? ""}
-                      onChange={(e) => setHours({ ...hours, closedUntil: e.target.value })}
-                      className="mt-1 w-full max-w-xs px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 outline-none"
-                    />
+                  <div className="flex flex-wrap items-end gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Platné od (datum)</label>
+                      <input
+                        type="date"
+                        value={hours.closedFrom ?? ""}
+                        onChange={(e) => setHours({ ...hours, closedFrom: e.target.value })}
+                        className="mt-1 w-full min-w-[160px] px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 outline-none"
+                        placeholder="Nepovinné"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Platné do (datum)</label>
+                      <input
+                        type="date"
+                        value={hours.closedUntil ?? ""}
+                        onChange={(e) => setHours({ ...hours, closedUntil: e.target.value })}
+                        className="mt-1 w-full min-w-[160px] px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 outline-none"
+                      />
+                    </div>
                   </div>
+                  <p className="text-xs text-gray-500 mt-1">Oba nevyplněno = oznámení platí hned a zrušíte jen ručně. Vyplníte jen „do“ = platí do toho data. Vyplníte „od“ a „do“ = platí jen v tomto rozmezí.</p>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Důvod zavření (např. dovolená, nemoc)</label>
                     <textarea
@@ -321,21 +352,37 @@ export function AdminPanel() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Náhrada / na koho se obrátit (seznam)</label>
+                    <p className="text-xs text-gray-500 mb-2">Vyberte doktora ze seznamu (dopředu vyplní jméno, telefon a adresu), nebo vyplňte nového – při uložení se přidá do výběru.</p>
                     <div className="space-y-3">
                       {(hours.replacements ?? []).map((r, i) => (
                         <div key={i} className="space-y-2 p-3 bg-gray-50 rounded-lg border border-gray-100">
-                          <div className="flex gap-2 items-center">
-                            <input
-                              type="text"
-                              value={r.name}
+                          <div className="flex flex-wrap gap-2 items-center">
+                            <select
+                              className="flex-1 min-w-[200px] px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 outline-none bg-white"
+                              value={(() => {
+                                const list = hours.savedReplacementDoctors ?? [];
+                                const idx = list.findIndex(
+                                  (d) => (d.name ?? "").trim() === (r.name ?? "").trim() && (d.contact ?? "").trim() === (r.contact ?? "").trim()
+                                );
+                                return idx >= 0 ? String(idx) : "";
+                              })()}
                               onChange={(e) => {
-                                const next = [...(hours.replacements ?? [])];
-                                next[i] = { ...next[i], name: e.target.value };
-                                setHours({ ...hours, replacements: next });
+                                const idx = e.target.value === "" ? -1 : parseInt(e.target.value, 10);
+                                const list = hours.savedReplacementDoctors ?? [];
+                                if (idx >= 0 && idx < list.length) {
+                                  const next = [...(hours.replacements ?? [])];
+                                  next[i] = { name: list[idx].name ?? "", contact: list[idx].contact ?? "", address: list[idx].address ?? "" };
+                                  setHours({ ...hours, replacements: next });
+                                }
                               }}
-                              placeholder="Název / jméno (např. MUDr. Novák)"
-                              className="flex-1 px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 outline-none"
-                            />
+                            >
+                              <option value="">— Vyberte doktora nebo vyplňte nového —</option>
+                              {(hours.savedReplacementDoctors ?? []).map((d, idx) => (
+                                <option key={idx} value={idx}>
+                                  {d.name || "—"} {d.contact ? `(${d.contact})` : ""}
+                                </option>
+                              ))}
+                            </select>
                             <button
                               type="button"
                               onClick={() => setHours({ ...hours, replacements: (hours.replacements ?? []).filter((_, j) => j !== i) })}
@@ -345,6 +392,17 @@ export function AdminPanel() {
                               <Trash2 className="w-5 h-5" />
                             </button>
                           </div>
+                          <input
+                            type="text"
+                            value={r.name}
+                            onChange={(e) => {
+                              const next = [...(hours.replacements ?? [])];
+                              next[i] = { ...next[i], name: e.target.value };
+                              setHours({ ...hours, replacements: next });
+                            }}
+                            placeholder="Jméno (např. MUDr. Novák)"
+                            className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 outline-none"
+                          />
                           <input
                             type="text"
                             value={r.contact}

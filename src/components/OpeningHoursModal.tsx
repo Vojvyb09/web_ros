@@ -27,6 +27,8 @@ interface OpeningHours {
   acceptingPatients?: boolean;
   closedOffice?: boolean;
   closedReason?: string;
+  /** Platné od (YYYY-MM-DD). Prázdné = platí hned. */
+  closedFrom?: string;
   /** Platné do (YYYY-MM-DD) – po tomto datu se zobrazí běžné okno. */
   closedUntil?: string;
   replacements?: Replacement[];
@@ -71,16 +73,23 @@ export function OpeningHoursModal({ isOpen: isOpenProp, onClose }: OpeningHoursM
 
   const hasClosedContent =
     (hours.closedReason ?? "").trim() || (hours.replacements ?? []).some(hasReplacementContent);
+  const closedFromStr = (hours.closedFrom ?? "").trim();
   const closedUntilStr = (hours.closedUntil ?? "").trim();
-  const stillInEffect =
-    !closedUntilStr ||
-    (() => {
+  const stillInEffect = (() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (closedFromStr) {
+      const from = new Date(closedFromStr);
+      from.setHours(0, 0, 0, 0);
+      if (today < from) return false;
+    }
+    if (closedUntilStr) {
       const until = new Date(closedUntilStr);
       until.setHours(0, 0, 0, 0);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      return today <= until;
-    })();
+      if (today > until) return false;
+    }
+    return true;
+  })();
   const isClosed =
     hours.closedOffice && hasClosedContent && stillInEffect;
 
