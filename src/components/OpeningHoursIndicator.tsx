@@ -92,7 +92,7 @@ export function OpeningHoursIndicator({ onOpenModal }: OpeningHoursIndicatorProp
     <button
       type="button"
       onClick={onOpenModal}
-      className="fixed right-4 top-1/2 -translate-y-1/2 z-50 w-14 h-14 rounded-full shadow-lg flex items-center justify-center border-2 border-white/80 transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50"
+      className="fixed right-2 top-1/2 -translate-y-1/2 z-50 w-12 h-12 sm:w-14 sm:h-14 sm:right-4 rounded-full shadow-lg flex items-center justify-center border-2 border-white/80 transition-transform active:scale-95 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 touch-manipulation min-w-[48px] min-h-[48px]"
       style={{
         backgroundColor: isOpen ? "#16a34a" : "#dc2626",
         boxShadow: isOpen
@@ -102,7 +102,7 @@ export function OpeningHoursIndicator({ onOpenModal }: OpeningHoursIndicatorProp
       title={isOpen ? "Ordinace je nyní otevřená – klikněte pro detail" : "Ordinace je nyní zavřená – klikněte pro detail"}
       aria-label={isOpen ? "Otevřeno, zobrazit ordinační dobu" : "Zavřeno, zobrazit ordinační dobu"}
     >
-      <Clock className="w-6 h-6 text-white" />
+      <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-white pointer-events-none" />
     </button>
   );
 }

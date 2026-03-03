@@ -1,8 +1,18 @@
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import { SectionDivider } from "@/components/SectionDivider";
 
 export function Hero() {
+  const [acceptingPatients, setAcceptingPatients] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    fetch("/api/hours")
+      .then((res) => res.json())
+      .then((data) => setAcceptingPatients(data.acceptingPatients !== false))
+      .catch(() => setAcceptingPatients(null));
+  }, []);
+
   return (
     <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image with Overlay */}
@@ -49,13 +59,17 @@ export function Hero() {
             </a>
           </div>
 
-          <div className="mt-12 flex items-center gap-8 text-sm text-gray-500 font-medium">
+          <div className="mt-12 flex flex-wrap items-center gap-6 sm:gap-8 text-sm text-gray-500 font-medium">
+            {acceptingPatients !== null && (
+              <div className="flex items-center gap-2">
+                <span className={`w-2 h-2 rounded-full shrink-0 ${acceptingPatients ? "bg-green-500" : "bg-red-500"}`} />
+                <span className={acceptingPatients ? "text-gray-700" : "text-red-700"}>
+                  {acceptingPatients ? "Přijímáme nové pacienty" : "Momentálně nepřijímáme nové pacienty"}
+                </span>
+              </div>
+            )}
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-green-500" />
-              Přijímáme nové pacienty
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-primary" />
+              <span className="w-2 h-2 rounded-full bg-primary shrink-0" />
               Špičkové vybavení
             </div>
           </div>

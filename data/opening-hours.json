@@ -7,6 +7,7 @@
   "saturday": "Zavřeno",
   "sunday": "Zavřeno",
   "note": "* Polední pauza 12:00 - 12:30",
+  "acceptingPatients": false,
   "closedOffice": false,
   "closedReason": "Dovolená ",
   "replacements": [

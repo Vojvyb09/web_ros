@@ -24,6 +24,8 @@ interface OpeningHours {
   saturdayBreak?: string;
   sundayBreak?: string;
   note: string;
+  /** Přijímáme nové pacienty – zobrazí se na hlavní stránce a v okně ordinační doby */
+  acceptingPatients?: boolean;
   closedOffice?: boolean;
   closedReason?: string;
   /** Platné do (datum) – po tomto datu se zobrazí běžné okno. Prázdné = bez automatického zrušení. */
@@ -71,6 +73,7 @@ export function AdminPanel() {
           saturdayBreak: data.saturdayBreak ?? "",
           sundayBreak: data.sundayBreak ?? "",
           closedOffice: data.closedOffice ?? false,
+          acceptingPatients: data.acceptingPatients !== false,
           closedReason: data.closedReason ?? "",
           closedUntil: data.closedUntil ?? "",
           replacements: Array.isArray(data.replacements)
@@ -247,8 +250,27 @@ export function AdminPanel() {
               })}
             </div>
 
+            <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl border border-gray-100">
+              <span className="text-sm font-medium text-gray-700">Přijímáme nové pacienty</span>
+              <div className="flex rounded-lg border border-gray-200 p-0.5 bg-white">
+                <button
+                  type="button"
+                  onClick={() => setHours({ ...hours, acceptingPatients: true })}
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${hours.acceptingPatients !== false ? "bg-primary text-white" : "text-gray-600 hover:bg-gray-100"}`}
+                >
+                  Ano
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setHours({ ...hours, acceptingPatients: false })}
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${hours.acceptingPatients === false ? "bg-red-600 text-white" : "text-gray-600 hover:bg-gray-100"}`}
+                >
+                  Ne
+                </button>
+              </div>
+            </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Poznámka (zobrazí se pod hodinami)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Poznámka (zobrazí se pod hodinami, např. polední pauza)</label>
               <input
                 type="text"
                 value={hours.note}

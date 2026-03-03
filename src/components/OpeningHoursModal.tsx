@@ -24,6 +24,7 @@ interface OpeningHours {
   saturdayBreak?: string;
   sundayBreak?: string;
   note: string;
+  acceptingPatients?: boolean;
   closedOffice?: boolean;
   closedReason?: string;
   /** Platné do (YYYY-MM-DD) – po tomto datu se zobrazí běžné okno. */
@@ -86,7 +87,7 @@ export function OpeningHoursModal({ isOpen: isOpenProp, onClose }: OpeningHoursM
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -101,7 +102,7 @@ export function OpeningHoursModal({ isOpen: isOpenProp, onClose }: OpeningHoursM
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", duration: 0.5 }}
             onClick={(e) => e.stopPropagation()}
-            className="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden"
+            className="relative bg-white rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto my-auto"
           >
             {isClosed ? (
               /* ——— Jen okno „Zavřená ordinace“ ——— */
@@ -233,6 +234,11 @@ export function OpeningHoursModal({ isOpen: isOpenProp, onClose }: OpeningHoursM
                           </div>
                         );
                       })}
+                    </div>
+                    <div className={`mt-4 py-3 px-4 rounded-xl border font-medium text-center ${hours.acceptingPatients !== false ? "bg-green-50 border-green-200 text-green-800" : "bg-red-50 border-red-200 text-red-800"}`}>
+                      {hours.acceptingPatients !== false
+                        ? "Přijímáme nové pacienty"
+                        : "Momentálně nepřijímáme nové pacienty"}
                     </div>
                     {hours.note && (
                       <p className="text-xs text-gray-500 mt-3 italic">{hours.note}</p>
