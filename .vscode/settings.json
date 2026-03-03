@@ -1,5 +1,15 @@
 {
   "liveServer.settings.root": "/dist",
   "liveServer.settings.port": 5500,
-  "liveServer.settings.CustomBrowser": "default"
+  "liveServer.settings.CustomBrowser": "default",
+  "terminal.integrated.env.windows": {
+    "PATH": "C:\\Program Files\\nodejs;${env:PATH}"
+  },
+  "terminal.integrated.profiles.windows": {
+    "PowerShell (s Node.js)": {
+      "path": "powershell.exe",
+      "args": ["-NoExit", "-Command", "$env:Path = 'C:\\Program Files\\nodejs;' + $env:Path"]
+    }
+  },
+  "terminal.integrated.defaultProfile.windows": "PowerShell (s Node.js)"
 }
