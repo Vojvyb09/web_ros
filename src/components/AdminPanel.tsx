@@ -14,9 +14,16 @@ interface OpeningHours {
   wednesday: string;
   thursday: string;
   friday: string;
+  mondayBreak?: string;
+  tuesdayBreak?: string;
+  wednesdayBreak?: string;
+  thursdayBreak?: string;
+  fridayBreak?: string;
   note: string;
   closedOffice?: boolean;
   closedReason?: string;
+  /** Platné do (datum) – po tomto datu se zobrazí běžné okno. Prázdné = bez automatického zrušení. */
+  closedUntil?: string;
   replacements?: Replacement[];
 }
 
@@ -50,8 +57,14 @@ export function AdminPanel() {
         console.log("AdminPanel: Načtená data:", data);
         setHours({
           ...data,
+          mondayBreak: data.mondayBreak ?? "",
+          tuesdayBreak: data.tuesdayBreak ?? "",
+          wednesdayBreak: data.wednesdayBreak ?? "",
+          thursdayBreak: data.thursdayBreak ?? "",
+          fridayBreak: data.fridayBreak ?? "",
           closedOffice: data.closedOffice ?? false,
           closedReason: data.closedReason ?? "",
+          closedUntil: data.closedUntil ?? "",
           replacements: Array.isArray(data.replacements)
             ? data.replacements.map((r: Replacement) => ({ name: r.name ?? "", contact: r.contact ?? "", address: r.address ?? "" }))
             : [],
@@ -173,51 +186,55 @@ export function AdminPanel() {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
           <form onSubmit={handleSave} className="space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Pondělí</label>
-                <input
-                  type="text"
-                  value={hours.monday}
-                  onChange={(e) => setHours({ ...hours, monday: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 outline-none"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Úterý</label>
-                <input
-                  type="text"
-                  value={hours.tuesday}
-                  onChange={(e) => setHours({ ...hours, tuesday: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 outline-none"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Středa</label>
-                <input
-                  type="text"
-                  value={hours.wednesday}
-                  onChange={(e) => setHours({ ...hours, wednesday: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 outline-none"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Čtvrtek</label>
-                <input
-                  type="text"
-                  value={hours.thursday}
-                  onChange={(e) => setHours({ ...hours, thursday: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 outline-none"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Pátek</label>
-                <input
-                  type="text"
-                  value={hours.friday}
-                  onChange={(e) => setHours({ ...hours, friday: e.target.value })}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 outline-none"
-                />
-              </div>
+              {[
+                { key: "monday" as const, breakKey: "mondayBreak" as const, label: "Pondělí" },
+                { key: "tuesday" as const, breakKey: "tuesdayBreak" as const, label: "Úterý" },
+                { key: "wednesday" as const, breakKey: "wednesdayBreak" as const, label: "Středa" },
+                { key: "thursday" as const, breakKey: "thursdayBreak" as const, label: "Čtvrtek" },
+                { key: "friday" as const, breakKey: "fridayBreak" as const, label: "Pátek" },
+              ].map(({ key, breakKey, label }) => {
+                const value = hours[key] ?? "";
+                const breakValue = hours[breakKey] ?? "";
+                const isClosed = String(value).trim().toLowerCase() === "zavřeno";
+                return (
+                  <div key={key} className="space-y-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        value={String(value)}
+                        onChange={(e) => setHours({ ...hours, [key]: e.target.value })}
+                        disabled={isClosed}
+                        placeholder={isClosed ? "" : "např. 7:00 - 15:30"}
+                        className={`flex-1 px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 outline-none ${isClosed ? "bg-gray-100 text-gray-500" : ""}`}
+                      />
+                      <label className="flex items-center gap-2 shrink-0 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={isClosed}
+                          onChange={(e) =>
+                            setHours({
+                              ...hours,
+                              [key]: e.target.checked ? "Zavřeno" : "",
+                            })
+                          }
+                          className="rounded border-gray-300 text-red-600 focus:ring-red-500"
+                        />
+                        <span className="text-sm font-medium text-gray-700">Zavřeno</span>
+                      </label>
+                    </div>
+                    {!isClosed && (
+                      <input
+                        type="text"
+                        value={String(breakValue)}
+                        onChange={(e) => setHours({ ...hours, [breakKey]: e.target.value })}
+                        placeholder="Polední přestávka (např. 12:00 - 12:30)"
+                        className="w-full px-3 py-1.5 text-sm rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 outline-none"
+                      />
+                    )}
+                  </div>
+                );
+              })}
             </div>
 
             <div>
@@ -251,6 +268,15 @@ export function AdminPanel() {
               </div>
               {hours.closedOffice && (
                 <>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Platné do (datum) – po tomto datu se zobrazí běžné okno, nevyplněno = zrušíte jen ručně</label>
+                    <input
+                      type="date"
+                      value={hours.closedUntil ?? ""}
+                      onChange={(e) => setHours({ ...hours, closedUntil: e.target.value })}
+                      className="mt-1 w-full max-w-xs px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 outline-none"
+                    />
+                  </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Důvod zavření (např. dovolená, nemoc)</label>
                     <textarea

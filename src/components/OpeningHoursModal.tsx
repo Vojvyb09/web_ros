@@ -14,9 +14,16 @@ interface OpeningHours {
   wednesday: string;
   thursday: string;
   friday: string;
+  mondayBreak?: string;
+  tuesdayBreak?: string;
+  wednesdayBreak?: string;
+  thursdayBreak?: string;
+  fridayBreak?: string;
   note: string;
   closedOffice?: boolean;
   closedReason?: string;
+  /** Platné do (YYYY-MM-DD) – po tomto datu se zobrazí běžné okno. */
+  closedUntil?: string;
   replacements?: Replacement[];
 }
 
@@ -40,9 +47,20 @@ export function OpeningHoursModal() {
 
   if (!hours) return null;
 
+  const hasClosedContent =
+    (hours.closedReason ?? "").trim() || (hours.replacements ?? []).some(hasReplacementContent);
+  const closedUntilStr = (hours.closedUntil ?? "").trim();
+  const stillInEffect =
+    !closedUntilStr ||
+    (() => {
+      const until = new Date(closedUntilStr);
+      until.setHours(0, 0, 0, 0);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return today <= until;
+    })();
   const isClosed =
-    hours.closedOffice &&
-    ((hours.closedReason ?? "").trim() || (hours.replacements ?? []).some(hasReplacementContent));
+    hours.closedOffice && hasClosedContent && stillInEffect;
 
   return (
     <AnimatePresence>
@@ -165,26 +183,33 @@ export function OpeningHoursModal() {
                       Ordinační doba
                     </h3>
                     <div className="space-y-3">
-                      <div className="flex justify-between items-center border-b border-gray-100 pb-2">
-                        <span className="text-gray-600">Pondělí</span>
-                        <span className="font-medium text-gray-900">{hours.monday}</span>
-                      </div>
-                      <div className="flex justify-between items-center border-b border-gray-100 pb-2">
-                        <span className="text-gray-600">Úterý</span>
-                        <span className="font-medium text-gray-900">{hours.tuesday}</span>
-                      </div>
-                      <div className="flex justify-between items-center border-b border-gray-100 pb-2">
-                        <span className="text-gray-600">Středa</span>
-                        <span className="font-medium text-gray-900">{hours.wednesday}</span>
-                      </div>
-                      <div className="flex justify-between items-center border-b border-gray-100 pb-2">
-                        <span className="text-gray-600">Čtvrtek</span>
-                        <span className="font-medium text-gray-900">{hours.thursday}</span>
-                      </div>
-                      <div className="flex justify-between items-center border-b border-gray-100 pb-2">
-                        <span className="text-gray-600">Pátek</span>
-                        <span className="font-medium text-gray-900">{hours.friday}</span>
-                      </div>
+                      {[
+                        { day: "Pondělí", value: hours.monday, break: hours.mondayBreak },
+                        { day: "Úterý", value: hours.tuesday, break: hours.tuesdayBreak },
+                        { day: "Středa", value: hours.wednesday, break: hours.wednesdayBreak },
+                        { day: "Čtvrtek", value: hours.thursday, break: hours.thursdayBreak },
+                        { day: "Pátek", value: hours.friday, break: hours.fridayBreak },
+                      ].map(({ day, value, break: breakVal }) => {
+                        const isClosed = (value ?? "").trim().toLowerCase() === "zavřeno";
+                        const hasBreak = (breakVal ?? "").trim();
+                        return (
+                          <div key={day} className="border-b border-gray-100 pb-2">
+                            <div className="flex justify-between items-center">
+                              <span className="text-gray-600">{day}</span>
+                              <span
+                                className={`font-medium ${isClosed ? "text-red-600" : "text-gray-900"}`}
+                              >
+                                {value || "—"}
+                              </span>
+                            </div>
+                            {hasBreak && (
+                              <p className="text-xs text-gray-500 mt-0.5 italic pl-0">
+                                Polední pauza {breakVal}
+                              </p>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                     {hours.note && (
                       <p className="text-xs text-gray-500 mt-3 italic">{hours.note}</p>
