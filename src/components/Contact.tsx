@@ -1,4 +1,3 @@
-import { motion } from "motion/react";
 import { MapPin, Phone, Mail, Clock, Navigation, Building2, Download } from "lucide-react";
 import QRCode from "react-qr-code";
 
@@ -28,9 +27,19 @@ END:VCARD`;
   };
 
   return (
-    <section id="contact" className="py-24 bg-white">
-      <div className="container mx-auto px-6">
-        <div className="grid md:grid-cols-2 gap-12">
+    <section id="contact" className="relative py-24 overflow-hidden">
+      {/* Jemné pozadí – fotka s bílým překryvem, aby nevyčnívala */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src="/photo/back.png"
+          alt=""
+          className="w-full h-full object-cover"
+          aria-hidden
+        />
+        <div className="absolute inset-0 bg-white/85" />
+      </div>
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="grid md:grid-cols-1 max-w-2xl">
           {/* Contact Info */}
           <div>
             <span className="text-accent font-medium tracking-wide uppercase text-sm mb-4 block">
@@ -40,7 +49,7 @@ END:VCARD`;
               Jsme tu pro vás
             </h2>
             <p className="text-lg text-gray-600 mb-12 max-w-md">
-              Máte dotazy nebo se chcete objednat na vyšetření? Neváhejte nás kontaktovat nebo využijte formulář.
+              Máte dotazy? Neváhejte nás kontaktovat.
             </p>
 
             <div className="space-y-8">
@@ -138,86 +147,6 @@ END:VCARD`;
               </div>
             </div>
           </div>
-
-          {/* Contact Form */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="bg-gray-50 p-8 md:p-10 rounded-3xl shadow-sm border border-gray-100"
-          >
-            <h3 className="text-2xl font-serif font-medium text-gray-900 mb-6">
-              Objednat se online
-            </h3>
-            <form className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label htmlFor="name" className="text-sm font-medium text-gray-700">Jméno a příjmení</label>
-                  <input
-                    type="text"
-                    id="name"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all bg-white"
-                    placeholder="Jan Novák"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label htmlFor="phone" className="text-sm font-medium text-gray-700">Telefon</label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all bg-white"
-                    placeholder="+420 777 123 456"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium text-gray-700">Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all bg-white"
-                  placeholder="jan.novak@example.com"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label htmlFor="service" className="text-sm font-medium text-gray-700">Typ vyšetření</label>
-                <select
-                  id="service"
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all bg-white text-gray-600"
-                >
-                  <option value="">Vyberte službu...</option>
-                  <option value="vysetreni">Vstupní vyšetření</option>
-                  <option value="laser">Konzultace laserové operace</option>
-                  <option value="zakal">Konzultace šedého zákalu</option>
-                  <option value="deti">Dětské vyšetření</option>
-                  <option value="ine">Jiné</option>
-                </select>
-              </div>
-
-              <div className="space-y-2">
-                <label htmlFor="message" className="text-sm font-medium text-gray-700">Zpráva (nepovinné)</label>
-                <textarea
-                  id="message"
-                  rows={4}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all bg-white resize-none"
-                  placeholder="Doplňující informace..."
-                ></textarea>
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-primary text-white font-medium py-4 rounded-xl hover:bg-primary/90 transition-colors shadow-lg hover:shadow-xl hover:-translate-y-0.5 transform duration-200"
-              >
-                Odeslat žádost
-              </button>
-              <p className="text-xs text-center text-gray-500 mt-4">
-                Odesláním formuláře souhlasíte se zpracováním osobních údajů.
-              </p>
-            </form>
-          </motion.div>
         </div>
       </div>
     </section>

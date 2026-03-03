@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Menu, X, Phone, Calendar } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/Logo";
 
@@ -52,13 +52,6 @@ export function Navbar() {
               {link.name}
             </a>
           ))}
-          <a
-            href="#contact"
-            className="bg-primary text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-primary/90 transition-colors flex items-center gap-2"
-          >
-            <Calendar className="w-4 h-4" />
-            Objednat se
-          </a>
         </div>
 
         {/* Mobile Menu Button */}
@@ -89,14 +82,6 @@ export function Navbar() {
                 {link.name}
               </a>
             ))}
-            <a
-              href="#contact"
-              className="bg-primary text-white px-5 py-3 rounded-xl text-center font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              <Calendar className="w-5 h-5" />
-              Objednat se
-            </a>
           </motion.div>
         )}
       </AnimatePresence>
