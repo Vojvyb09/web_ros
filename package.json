@@ -9,7 +9,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "clean": "rm -rf dist",
-    "deploy:cloudflare": "npm run build && npx wrangler pages deploy dist --project-name=web-ros",
+    "deploy:cloudflare": "npm run build && npx wrangler pages deploy dist --project-name=webros",
     "lint": "tsc --noEmit"
   },
   "dependencies": {
