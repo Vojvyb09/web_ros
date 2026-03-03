@@ -13,5 +13,11 @@
       "contact": "1234567",
       "address": "Sokolní "
     }
-  ]
+  ],
+  "mondayBreak": "",
+  "tuesdayBreak": "",
+  "wednesdayBreak": "",
+  "thursdayBreak": "",
+  "fridayBreak": "",
+  "closedUntil": ""
 }

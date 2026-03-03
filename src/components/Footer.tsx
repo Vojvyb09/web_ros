@@ -1,7 +1,39 @@
-import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Facebook, Instagram, Linkedin } from "lucide-react";
 import { Logo } from "@/components/Logo";
 
+interface OpeningHours {
+  monday: string;
+  tuesday: string;
+  wednesday: string;
+  thursday: string;
+  friday: string;
+  mondayBreak?: string;
+  tuesdayBreak?: string;
+  wednesdayBreak?: string;
+  thursdayBreak?: string;
+  fridayBreak?: string;
+  note?: string;
+}
+
 export function Footer() {
+  const [hours, setHours] = useState<OpeningHours | null>(null);
+
+  useEffect(() => {
+    fetch("/api/hours")
+      .then((res) => res.json())
+      .then((data) => setHours(data))
+      .catch(() => setHours(null));
+  }, []);
+
+  const days = [
+    { label: "Pondělí", value: hours?.monday ?? "", break: hours?.mondayBreak },
+    { label: "Úterý", value: hours?.tuesday ?? "", break: hours?.tuesdayBreak },
+    { label: "Středa", value: hours?.wednesday ?? "", break: hours?.wednesdayBreak },
+    { label: "Čtvrtek", value: hours?.thursday ?? "", break: hours?.thursdayBreak },
+    { label: "Pátek", value: hours?.friday ?? "", break: hours?.fridayBreak },
+  ];
+
   return (
     <footer className="bg-gray-900 text-white py-16 border-t border-gray-800">
       <div className="container mx-auto px-6">
@@ -51,18 +83,38 @@ export function Footer() {
           <div>
             <h4 className="text-lg font-medium mb-6">Otevírací doba</h4>
             <ul className="space-y-4 text-gray-400">
-              <li className="flex justify-between">
-                <span>Pondělí - Pátek</span>
-                <span>8:00 - 18:00</span>
-              </li>
-              <li className="flex justify-between">
-                <span>Sobota</span>
-                <span>Na objednání</span>
-              </li>
-              <li className="flex justify-between">
-                <span>Neděle</span>
-                <span>Zavřeno</span>
-              </li>
+              {hours
+                ? days.map(({ label, value, break: breakVal }) => {
+                    const isClosed = (value ?? "").trim().toLowerCase() === "zavřeno";
+                    const hasBreak = (breakVal ?? "").trim();
+                    return (
+                      <li key={label} className="flex flex-col gap-0.5">
+                        <div className="flex justify-between items-center">
+                          <span>{label}</span>
+                          <span className={isClosed ? "text-red-400 font-medium" : ""}>
+                            {value || "—"}
+                          </span>
+                        </div>
+                        {hasBreak && (
+                          <span className="text-xs text-gray-500 italic">
+                            Polední pauza {breakVal}
+                          </span>
+                        )}
+                      </li>
+                    );
+                  })
+                : (
+                  <>
+                    <li className="flex justify-between"><span>Pondělí - Pátek</span><span>8:00 - 18:00</span></li>
+                    <li className="flex justify-between"><span>Sobota</span><span>Na objednání</span></li>
+                    <li className="flex justify-between"><span>Neděle</span><span>Zavřeno</span></li>
+                  </>
+                )}
+              {hours?.note && (
+                <li className="text-xs italic text-gray-500 pt-1 border-t border-gray-700 mt-2">
+                  {hours.note}
+                </li>
+              )}
             </ul>
           </div>
         </div>
