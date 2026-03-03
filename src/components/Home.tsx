@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { Services } from "@/components/Services";
@@ -8,11 +9,20 @@ import { Testimonials } from "@/components/Testimonials";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import { OpeningHoursModal } from "@/components/OpeningHoursModal";
+import { OpeningHoursIndicator } from "@/components/OpeningHoursIndicator";
 
 export function Home() {
+  const [hoursModalOpen, setHoursModalOpen] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setHoursModalOpen(true), 1000);
+    return () => clearTimeout(t);
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50 font-sans text-gray-900">
-      <OpeningHoursModal />
+      <OpeningHoursModal isOpen={hoursModalOpen} onClose={() => setHoursModalOpen(false)} />
+      <OpeningHoursIndicator onOpenModal={() => setHoursModalOpen(true)} />
       <Navbar />
       <main>
         <Hero />

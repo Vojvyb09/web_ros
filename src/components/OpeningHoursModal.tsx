@@ -35,19 +35,36 @@ function hasReplacementContent(r: Replacement) {
   return (r.name ?? "").trim() || (r.contact ?? "").trim() || (r.address ?? "").trim();
 }
 
-export function OpeningHoursModal() {
-  const [isOpen, setIsOpen] = useState(false);
+interface OpeningHoursModalProps {
+  /** Když jsou předány, modal je řízen zvenčí (např. z bočního indikátoru). */
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+export function OpeningHoursModal({ isOpen: isOpenProp, onClose }: OpeningHoursModalProps = {}) {
+  const [internalOpen, setInternalOpen] = useState(false);
   const [hours, setHours] = useState<OpeningHours | null>(null);
+
+  const isControlled = isOpenProp !== undefined && onClose != null;
+  const isOpen = isControlled ? isOpenProp : internalOpen;
+  const closeModal = () => {
+    if (isControlled) onClose?.();
+    else setInternalOpen(false);
+  };
 
   useEffect(() => {
     fetch("/api/hours")
       .then((res) => res.json())
       .then((data) => setHours(data))
       .catch((err) => console.error("Failed to fetch hours:", err));
-
-    const timer = setTimeout(() => setIsOpen(true), 1000);
-    return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    if (!isControlled) {
+      const timer = setTimeout(() => setInternalOpen(true), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [isControlled]);
 
   if (!hours) return null;
 
@@ -74,7 +91,7 @@ export function OpeningHoursModal() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setIsOpen(false)}
+            onClick={() => closeModal()}
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
           />
 
@@ -100,7 +117,7 @@ export function OpeningHoursModal() {
                     <h2 className="text-2xl font-serif font-medium">Zavřená ordinace</h2>
                   </div>
                   <button
-                    onClick={() => setIsOpen(false)}
+                    onClick={() => closeModal()}
                     className="text-white/80 hover:text-white hover:bg-white/10 p-2 rounded-full transition-colors"
                   >
                     <X className="w-6 h-6" />
@@ -152,7 +169,7 @@ export function OpeningHoursModal() {
                   )}
 
                   <button
-                    onClick={() => setIsOpen(false)}
+                    onClick={() => closeModal()}
                     className="w-full bg-red-600 text-white py-3 rounded-xl font-medium hover:bg-red-700 transition-colors"
                   >
                     Rozumím
@@ -173,7 +190,7 @@ export function OpeningHoursModal() {
                     <h2 className="text-2xl font-serif font-medium">Aktuální informace</h2>
                   </div>
                   <button
-                    onClick={() => setIsOpen(false)}
+                    onClick={() => closeModal()}
                     className="text-white/80 hover:text-white hover:bg-white/10 p-2 rounded-full transition-colors"
                   >
                     <X className="w-6 h-6" />
@@ -240,7 +257,7 @@ export function OpeningHoursModal() {
                   </div>
 
                   <button
-                    onClick={() => setIsOpen(false)}
+                    onClick={() => closeModal()}
                     className="w-full bg-primary text-white py-3 rounded-xl font-medium hover:bg-primary/90 transition-colors"
                   >
                     Rozumím
