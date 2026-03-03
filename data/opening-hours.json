@@ -7,14 +7,14 @@
   "saturday": "Zavřeno",
   "sunday": "Zavřeno",
   "note": "* Polední pauza 12:00 - 12:30",
-  "acceptingPatients": false,
+  "acceptingPatients": true,
   "closedOffice": false,
   "closedReason": "Dovolená ",
   "replacements": [
     {
-      "name": "MUDr.Novák",
-      "contact": "1234567",
-      "address": "Sokolní "
+      "name": "",
+      "contact": "",
+      "address": ""
     }
   ],
   "savedReplacementDoctors": [
