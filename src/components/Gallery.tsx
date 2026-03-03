@@ -4,37 +4,14 @@ import { ChevronLeft, ChevronRight, Camera } from "lucide-react";
 import { SectionDivider } from "@/components/SectionDivider";
 import { cn } from "@/lib/utils";
 
+/** Fotky ze složky public/photo (názvy podle vašich souborů) */
 const images = [
-  {
-    src: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=2053&auto=format&fit=crop",
-    alt: "Moderní čekárna",
-    title: "Příjemná čekárna",
-    description: "Prostředí navržené pro váš komfort a klid."
-  },
-  {
-    src: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?q=80&w=2068&auto=format&fit=crop",
-    alt: "Ordinace",
-    title: "Hlavní ordinace",
-    description: "Vybavena nejmodernější diagnostickou technikou."
-  },
-  {
-    src: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=2080&auto=format&fit=crop",
-    alt: "Přístroje",
-    title: "Špičkové vybavení",
-    description: "OCT a další přístroje pro přesnou diagnostiku."
-  },
-  {
-    src: "https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=2070&auto=format&fit=crop",
-    alt: "Recepce",
-    title: "Recepce",
-    description: "Náš personál se o vás postará hned při příchodu."
-  },
-  {
-    src: "https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?q=80&w=2070&auto=format&fit=crop",
-    alt: "Optika",
-    title: "Spolupráce s optikou",
-    description: "Poradíme vám s výběrem těch nejlepších brýlí."
-  }
+  { src: "/photo/cekarna.jpg", alt: "Čekárna", title: "Příjemná čekárna", description: "Prostředí navržené pro váš komfort a klid." },
+  { src: "/photo/ordinace_main.jpg", alt: "Ordinace", title: "Hlavní ordinace", description: "Vybavena nejmodernější diagnostickou technikou." },
+  { src: "/photo/pristroj_1.jpg", alt: "Přístroj 1", title: "Špičkové vybavení", description: "OCT a další přístroje pro přesnou diagnostiku." },
+  { src: "/photo/pristorj_2.jpg", alt: "Přístroj 2", title: "Diagnostika", description: "Přesná a šetrná vyšetření." },
+  { src: "/photo/pristroj_3.jpg", alt: "Přístroj 3", title: "Technologie", description: "Nejmodernější přístrojové vybavení." },
+  { src: "/photo/pristroj_4.jpg", alt: "Přístroj 4", title: "Prostředí ordinace", description: "Čisté a moderní prostředí pro vaši péči." },
 ];
 
 export function Gallery() {
