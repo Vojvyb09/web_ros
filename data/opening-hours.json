@@ -1,8 +1,16 @@
 {
-  "monday": "8:00 - 15:30",
+  "monday": "7:00 - 15:30",
   "tuesday": "7:30 - 15:30",
   "wednesday": "7:30 - 15:30",
   "thursday": "7:30 - 15:30",
   "friday": "7:30 - 12:00",
-  "note": "* Polední pauza 12:00 - 12:30"
+  "note": "* Polední pauza 12:00 - 12:30",
+  "closedOffice": false,
+  "closedReason": "Dovolená ",
+  "replacements": [
+    {
+      "name": "MUDr.Novák",
+      "contact": "1234567"
+    }
+  ]
 }

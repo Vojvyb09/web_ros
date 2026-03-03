@@ -1,6 +1,12 @@
 import { useState, useEffect, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { Save, LogOut, Home } from "lucide-react";
+import { Save, LogOut, Home, DoorClosed, Plus, Trash2 } from "lucide-react";
+
+export interface Replacement {
+  name: string;
+  contact: string;
+  address?: string;
+}
 
 interface OpeningHours {
   monday: string;
@@ -9,6 +15,9 @@ interface OpeningHours {
   thursday: string;
   friday: string;
   note: string;
+  closedOffice?: boolean;
+  closedReason?: string;
+  replacements?: Replacement[];
 }
 
 export function AdminPanel() {
@@ -39,7 +48,14 @@ export function AdminPanel() {
       })
       .then((data) => {
         console.log("AdminPanel: Načtená data:", data);
-        setHours(data);
+        setHours({
+          ...data,
+          closedOffice: data.closedOffice ?? false,
+          closedReason: data.closedReason ?? "",
+          replacements: Array.isArray(data.replacements)
+            ? data.replacements.map((r: Replacement) => ({ name: r.name ?? "", contact: r.contact ?? "", address: r.address ?? "" }))
+            : [],
+        });
         setLoading(false);
       })
       .catch((err) => {
@@ -212,6 +228,101 @@ export function AdminPanel() {
                 onChange={(e) => setHours({ ...hours, note: e.target.value })}
                 className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 outline-none"
               />
+            </div>
+
+            {/* Zavřená ordinace */}
+            <div className="border-t border-gray-200 pt-6 space-y-4">
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setHours({ ...hours, closedOffice: !hours.closedOffice })}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl border-2 font-medium transition-colors ${
+                    hours.closedOffice
+                      ? "bg-amber-50 border-amber-400 text-amber-800"
+                      : "bg-gray-50 border-gray-200 text-gray-700 hover:border-gray-300"
+                  }`}
+                >
+                  <DoorClosed className="w-5 h-5" />
+                  Zavřená ordinace
+                </button>
+                {hours.closedOffice && (
+                  <span className="text-sm text-amber-700">(zobrazí se návštěvníkům)</span>
+                )}
+              </div>
+              {hours.closedOffice && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Důvod zavření (např. dovolená, nemoc)</label>
+                    <textarea
+                      value={hours.closedReason ?? ""}
+                      onChange={(e) => setHours({ ...hours, closedReason: e.target.value })}
+                      placeholder="Např. Dovolená 1.–15. 8."
+                      rows={2}
+                      className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 outline-none resize-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Náhrada / na koho se obrátit (seznam)</label>
+                    <div className="space-y-3">
+                      {(hours.replacements ?? []).map((r, i) => (
+                        <div key={i} className="space-y-2 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                          <div className="flex gap-2 items-center">
+                            <input
+                              type="text"
+                              value={r.name}
+                              onChange={(e) => {
+                                const next = [...(hours.replacements ?? [])];
+                                next[i] = { ...next[i], name: e.target.value };
+                                setHours({ ...hours, replacements: next });
+                              }}
+                              placeholder="Název / jméno (např. MUDr. Novák)"
+                              className="flex-1 px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 outline-none"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setHours({ ...hours, replacements: (hours.replacements ?? []).filter((_, j) => j !== i) })}
+                              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                              title="Odebrat"
+                            >
+                              <Trash2 className="w-5 h-5" />
+                            </button>
+                          </div>
+                          <input
+                            type="text"
+                            value={r.contact}
+                            onChange={(e) => {
+                              const next = [...(hours.replacements ?? [])];
+                              next[i] = { ...next[i], contact: e.target.value };
+                              setHours({ ...hours, replacements: next });
+                            }}
+                            placeholder="Telefon / e-mail"
+                            className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 outline-none"
+                          />
+                          <input
+                            type="text"
+                            value={r.address ?? ""}
+                            onChange={(e) => {
+                              const next = [...(hours.replacements ?? [])];
+                              next[i] = { ...next[i], address: e.target.value };
+                              setHours({ ...hours, replacements: next });
+                            }}
+                            placeholder="Adresa ordinace"
+                            className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 outline-none"
+                          />
+                        </div>
+                      ))}
+                      <button
+                        type="button"
+                        onClick={() => setHours({ ...hours, replacements: [...(hours.replacements ?? []), { name: "", contact: "", address: "" }] })}
+                        className="flex items-center gap-2 text-primary hover:bg-primary/5 px-3 py-2 rounded-lg transition-colors font-medium text-sm"
+                      >
+                        <Plus className="w-4 h-4" />
+                        Přidat náhradu
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
 
             <div className="pt-4 border-t border-gray-100 flex items-center justify-between">

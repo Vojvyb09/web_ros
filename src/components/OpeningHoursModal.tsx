@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { X, Clock, Phone, Calendar, AlertCircle } from "lucide-react";
+import { X, Clock, Phone, Calendar, AlertCircle, DoorClosed, User, MapPin } from "lucide-react";
+
+interface Replacement {
+  name: string;
+  contact: string;
+  address?: string;
+}
 
 interface OpeningHours {
   monday: string;
@@ -9,6 +15,13 @@ interface OpeningHours {
   thursday: string;
   friday: string;
   note: string;
+  closedOffice?: boolean;
+  closedReason?: string;
+  replacements?: Replacement[];
+}
+
+function hasReplacementContent(r: Replacement) {
+  return (r.name ?? "").trim() || (r.contact ?? "").trim() || (r.address ?? "").trim();
 }
 
 export function OpeningHoursModal() {
@@ -16,24 +29,25 @@ export function OpeningHoursModal() {
   const [hours, setHours] = useState<OpeningHours | null>(null);
 
   useEffect(() => {
-    // Fetch hours from API
     fetch("/api/hours")
       .then((res) => res.json())
       .then((data) => setHours(data))
       .catch((err) => console.error("Failed to fetch hours:", err));
 
-    // Show modal after a short delay
     const timer = setTimeout(() => setIsOpen(true), 1000);
     return () => clearTimeout(timer);
   }, []);
 
   if (!hours) return null;
 
+  const isClosed =
+    hours.closedOffice &&
+    ((hours.closedReason ?? "").trim() || (hours.replacements ?? []).some(hasReplacementContent));
+
   return (
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -42,91 +56,167 @@ export function OpeningHoursModal() {
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
           />
 
-          {/* Modal */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", duration: 0.5 }}
+            onClick={(e) => e.stopPropagation()}
             className="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden"
           >
-            {/* Header */}
-            <div className="bg-primary p-6 text-white flex justify-between items-start">
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <AlertCircle className="w-5 h-5 text-accent" />
-                  <span className="font-medium text-accent uppercase tracking-wide text-xs">Důležité informace</span>
+            {isClosed ? (
+              /* ——— Jen okno „Zavřená ordinace“ ——— */
+              <>
+                <div className="bg-amber-500 p-6 text-white flex justify-between items-start">
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <DoorClosed className="w-5 h-5" />
+                      <span className="font-medium uppercase tracking-wide text-xs opacity-90">
+                        Důležité oznámení
+                      </span>
+                    </div>
+                    <h2 className="text-2xl font-serif font-medium">Zavřená ordinace</h2>
+                  </div>
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    className="text-white/80 hover:text-white hover:bg-white/10 p-2 rounded-full transition-colors"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
                 </div>
-                <h2 className="text-2xl font-serif font-medium">Aktuální informace</h2>
-              </div>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="text-white/80 hover:text-white hover:bg-white/10 p-2 rounded-full transition-colors"
-              >
-                <X className="w-6 h-6" />
-              </button>
-            </div>
 
-            {/* Content */}
-            <div className="p-8">
-              <div className="mb-8">
-                <h3 className="flex items-center gap-2 text-lg font-medium text-gray-900 mb-4">
-                  <Clock className="w-5 h-5 text-primary" />
-                  Ordinační doba
-                </h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center border-b border-gray-100 pb-2">
-                    <span className="text-gray-600">Pondělí</span>
-                    <span className="font-medium text-gray-900">{hours.monday}</span>
-                  </div>
-                  <div className="flex justify-between items-center border-b border-gray-100 pb-2">
-                    <span className="text-gray-600">Úterý</span>
-                    <span className="font-medium text-gray-900">{hours.tuesday}</span>
-                  </div>
-                  <div className="flex justify-between items-center border-b border-gray-100 pb-2">
-                    <span className="text-gray-600">Středa</span>
-                    <span className="font-medium text-gray-900">{hours.wednesday}</span>
-                  </div>
-                  <div className="flex justify-between items-center border-b border-gray-100 pb-2">
-                    <span className="text-gray-600">Čtvrtek</span>
-                    <span className="font-medium text-gray-900">{hours.thursday}</span>
-                  </div>
-                  <div className="flex justify-between items-center border-b border-gray-100 pb-2">
-                    <span className="text-gray-600">Pátek</span>
-                    <span className="font-medium text-gray-900">{hours.friday}</span>
-                  </div>
+                <div className="p-8">
+                  {hours.closedReason?.trim() && (
+                    <p className="text-gray-800 text-lg mb-6 leading-relaxed">{hours.closedReason}</p>
+                  )}
+
+                  {hours.replacements && hours.replacements.filter(hasReplacementContent).length > 0 && (
+                    <div className="mb-6">
+                      <p className="text-sm font-medium text-gray-700 mb-3">Na koho se obrátit (náhrada):</p>
+                      <ul className="space-y-4">
+                        {hours.replacements.filter(hasReplacementContent).map((r, i) => (
+                          <li key={i} className="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                            <div className="flex items-start gap-2">
+                              <User className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                              <div className="min-w-0">
+                                <p className="font-medium text-gray-900">{r.name || "—"}</p>
+                                {r.contact && (
+                                  <p className="mt-1 text-sm">
+                                    {/^[\d\s+]+$/.test((r.contact ?? "").replace(/\s/g, "")) ? (
+                                      <a
+                                        href={`tel:${(r.contact ?? "").replace(/\s/g, "")}`}
+                                        className="text-primary hover:underline flex items-center gap-1"
+                                      >
+                                        <Phone className="w-4 h-4" />
+                                        {r.contact}
+                                      </a>
+                                    ) : (
+                                      <span className="text-gray-700">{r.contact}</span>
+                                    )}
+                                  </p>
+                                )}
+                                {r.address?.trim() && (
+                                  <p className="mt-1 text-sm text-gray-600 flex items-start gap-1">
+                                    <MapPin className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                                    {r.address}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    className="w-full bg-amber-500 text-white py-3 rounded-xl font-medium hover:bg-amber-600 transition-colors"
+                  >
+                    Rozumím
+                  </button>
                 </div>
-                {hours.note && (
-                  <p className="text-xs text-gray-500 mt-3 italic">
-                    {hours.note}
-                  </p>
-                )}
-              </div>
+              </>
+            ) : (
+              /* ——— Běžné okno s ordinační dobou ——— */
+              <>
+                <div className="bg-primary p-6 text-white flex justify-between items-start">
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <AlertCircle className="w-5 h-5 text-accent" />
+                      <span className="font-medium text-accent uppercase tracking-wide text-xs">
+                        Důležité informace
+                      </span>
+                    </div>
+                    <h2 className="text-2xl font-serif font-medium">Aktuální informace</h2>
+                  </div>
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    className="text-white/80 hover:text-white hover:bg-white/10 p-2 rounded-full transition-colors"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
 
-              <div className="bg-gray-50 rounded-xl p-4 border border-gray-100 mb-6">
-                <h4 className="font-medium text-gray-900 mb-2 flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-primary" />
-                  Objednání
-                </h4>
-                <p className="text-sm text-gray-600 mb-3">
-                  K vyšetření je nutné se předem objednat telefonicky nebo e-mailem.
-                </p>
-                <a 
-                  href="tel:+420734476654"
-                  className="flex items-center justify-center gap-2 w-full bg-white border border-gray-200 text-gray-900 py-2 rounded-lg hover:border-primary hover:text-primary transition-colors font-medium text-sm"
-                >
-                  <Phone className="w-4 h-4" />
-                  +420 734 476 654
-                </a>
-              </div>
+                <div className="p-8">
+                  <div className="mb-8">
+                    <h3 className="flex items-center gap-2 text-lg font-medium text-gray-900 mb-4">
+                      <Clock className="w-5 h-5 text-primary" />
+                      Ordinační doba
+                    </h3>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center border-b border-gray-100 pb-2">
+                        <span className="text-gray-600">Pondělí</span>
+                        <span className="font-medium text-gray-900">{hours.monday}</span>
+                      </div>
+                      <div className="flex justify-between items-center border-b border-gray-100 pb-2">
+                        <span className="text-gray-600">Úterý</span>
+                        <span className="font-medium text-gray-900">{hours.tuesday}</span>
+                      </div>
+                      <div className="flex justify-between items-center border-b border-gray-100 pb-2">
+                        <span className="text-gray-600">Středa</span>
+                        <span className="font-medium text-gray-900">{hours.wednesday}</span>
+                      </div>
+                      <div className="flex justify-between items-center border-b border-gray-100 pb-2">
+                        <span className="text-gray-600">Čtvrtek</span>
+                        <span className="font-medium text-gray-900">{hours.thursday}</span>
+                      </div>
+                      <div className="flex justify-between items-center border-b border-gray-100 pb-2">
+                        <span className="text-gray-600">Pátek</span>
+                        <span className="font-medium text-gray-900">{hours.friday}</span>
+                      </div>
+                    </div>
+                    {hours.note && (
+                      <p className="text-xs text-gray-500 mt-3 italic">{hours.note}</p>
+                    )}
+                  </div>
 
-              <button
-                onClick={() => setIsOpen(false)}
-                className="w-full bg-primary text-white py-3 rounded-xl font-medium hover:bg-primary/90 transition-colors"
-              >
-                Rozumím
-              </button>
-            </div>
+                  <div className="bg-gray-50 rounded-xl p-4 border border-gray-100 mb-6">
+                    <h4 className="font-medium text-gray-900 mb-2 flex items-center gap-2">
+                      <Calendar className="w-4 h-4 text-primary" />
+                      Objednání
+                    </h4>
+                    <p className="text-sm text-gray-600 mb-3">
+                      K vyšetření je nutné se předem objednat telefonicky nebo e-mailem.
+                    </p>
+                    <a
+                      href="tel:+420734476654"
+                      className="flex items-center justify-center gap-2 w-full bg-white border border-gray-200 text-gray-900 py-2 rounded-lg hover:border-primary hover:text-primary transition-colors font-medium text-sm"
+                    >
+                      <Phone className="w-4 h-4" />
+                      +420 734 476 654
+                    </a>
+                  </div>
+
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    className="w-full bg-primary text-white py-3 rounded-xl font-medium hover:bg-primary/90 transition-colors"
+                  >
+                    Rozumím
+                  </button>
+                </div>
+              </>
+            )}
           </motion.div>
         </div>
       )}
