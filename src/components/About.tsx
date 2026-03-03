@@ -16,8 +16,8 @@ export function About() {
             viewport={{ once: true }}
           >
             <img
-              src="https://picsum.photos/seed/doctor/800/1000"
-              alt="Náš tým lékařů"
+              src="/photo/oklinice.jpg"
+              alt="Oční ordinace MUDr. Marta Rösnerová"
               className="rounded-3xl shadow-2xl object-cover w-full h-[600px]"
             />
           </motion.div>
