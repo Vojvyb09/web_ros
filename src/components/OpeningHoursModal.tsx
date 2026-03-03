@@ -67,7 +67,7 @@ export function OpeningHoursModal() {
             {isClosed ? (
               /* ——— Jen okno „Zavřená ordinace“ ——— */
               <>
-                <div className="bg-amber-500 p-6 text-white flex justify-between items-start">
+                <div className="bg-red-600 p-6 text-white flex justify-between items-start">
                   <div>
                     <div className="flex items-center gap-2 mb-2">
                       <DoorClosed className="w-5 h-5" />
@@ -131,7 +131,7 @@ export function OpeningHoursModal() {
 
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="w-full bg-amber-500 text-white py-3 rounded-xl font-medium hover:bg-amber-600 transition-colors"
+                    className="w-full bg-red-600 text-white py-3 rounded-xl font-medium hover:bg-red-700 transition-colors"
                   >
                     Rozumím
                   </button>
