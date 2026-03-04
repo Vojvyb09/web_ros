@@ -67,6 +67,39 @@ Následující postup je jen pro případ, že máte nebo chcete používat **De
 
 ---
 
+## 4b. Když token pořád nefunguje (chyba 10000)
+
+Máte token i proměnnou nastavené, ale deploy stále padá na *Authentication error [code: 10000]*? Zkuste jednu z těchto cest.
+
+### Varianta A: No-op v Deploy command
+
+Cloudflare u standardního Git projektu sám nahrává obsah **Build output directory** po úspěšném buildu. Deploy command může být jen „nic nedělej“.
+
+1. **Build configuration** → **Deploy command** změňte na:
+   ```bash
+   true
+   ```
+   (Příkaz `true` jen vrátí úspěch a nic nespustí.)
+2. Uložte a spusťte **Retry deployment**.
+3. Pokud build projde a na stránce se objeví nová verze, Cloudflare výstup nahrál sám a další nic řešit nemusíte.
+
+### Varianta B: Deploy přes GitHub Actions
+
+Nasazení proběhne z GitHubu; token dáte do **GitHub Secrets**, ne do Cloudflare.
+
+1. Na GitHubu: **Settings** → **Secrets and variables** → **Actions** → **New repository secret**.
+2. Přidejte dva secrety:
+   - **Name:** `CLOUDFLARE_API_TOKEN`  
+     **Value:** váš API token (s oprávněním Cloudflare Pages – Edit).
+   - **Name:** `CLOUDFLARE_ACCOUNT_ID`  
+     **Value:** ID účtu (v Dashboardu v URL nebo Workers & Pages vpravo – např. `3dd428a239dcfb5bcc7477aa4663dbe3`).
+3. V repozitáři je workflow **`.github/workflows/deploy-pages.yml`** – při pushi na `main` se spustí build a deploy na projekt **webros**.
+4. V Cloudflare u projektu **webros** nastavte **Deploy command** na `true` (viz varianta A), aby Cloudflare build nepadal. Skutečné nasazení pak dělá jen GitHub Actions.
+
+Po prvním pushi na `main` se deploy spustí v záložce **Actions** na GitHubu. Pokud běží zeleně, stránka je nasazená.
+
+---
+
 ## 5. Vytvoření projektu a nasazení
 
 ### A) Přes Git (doporučeno – automatické deploye po pushi)
