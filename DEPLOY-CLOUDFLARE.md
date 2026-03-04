@@ -75,13 +75,16 @@ Máte token i proměnnou nastavené, ale deploy stále padá na *Authentication 
 
 Cloudflare u standardního Git projektu sám nahrává obsah **Build output directory** po úspěšném buildu. Deploy command může být jen „nic nedělej“.
 
-1. **Build configuration** → **Deploy command** změňte na:
-   ```bash
-   true
-   ```
-   (Příkaz `true` jen vrátí úspěch a nic nespustí.)
-2. Uložte a spusťte **Retry deployment**.
-3. Pokud build projde a na stránce se objeví nová verze, Cloudflare výstup nahrál sám a další nic řešit nemusíte.
+1. **Build configuration** → **Deploy command** změňte na jednu z těchto možností (zkuste v pořadí, pokud formulář neuloží):
+   - `npm run build` – build se spustí znovu, Cloudflare mezitím sám nahraje výstup z prvního buildu; **žádný token nepotřebujete** a formulář to často přijme.
+   - `true`
+   - `echo done`
+   - `exit 0`
+   (Všechny jen zajistí úspěšné dokončení kroku; samotné nahrání dělá Cloudflare z **Build output directory**.)
+2. Klikněte **Update** a spusťte **Retry deployment**.
+
+**Když při uložení dostanete „An internal error prevented the form from submitting“:**  
+Jde o chybu formuláře v Cloudflare. Zkuste: jiný prohlížeč nebo anonymní okno; uložit jen **Build command** a **Path**, Deploy command nechat zatím původní a uložit po kouscích; nebo přejít na **Variantu B** (GitHub Actions) a deploy řešit jen z GitHubu.
 
 ### Varianta B: Deploy přes GitHub Actions
 
