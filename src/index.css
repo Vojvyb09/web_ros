@@ -31,11 +31,13 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-serif);
 }
 
+/* Jedna „sada“ = 1/4 šířky (4 kopie) – na širokých monitorech pruh nepřestane vyplňovat obrazovku, reset je neviditelný */
 @keyframes scroll-insurance {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-25%); }
 }
 
 .animate-scroll-insurance {
-  animation: scroll-insurance 30s linear infinite;
+  animation: scroll-insurance 50s linear infinite;
+  will-change: transform;
 }

@@ -37,7 +37,8 @@ function LogoItem({ id, name, file }: { id: string; name: string; file: string }
 }
 
 export function InsurancePartners() {
-  const duplicated = [...INSURERS, ...INSURERS];
+  /* 4 kopie = pruh je dlouhý i na širokých monitorech, reset o 1/4 je neviditelný */
+  const duplicated = [...INSURERS, ...INSURERS, ...INSURERS, ...INSURERS];
 
   return (
     <section id="pojistovny" className="py-16 bg-gray-50 overflow-hidden">
@@ -51,7 +52,6 @@ export function InsurancePartners() {
       </div>
 
       <div className="relative">
-        {/* Gradient masky pro plynulý přechod na okrajích */}
         <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-gray-50 to-transparent z-10 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-gray-50 to-transparent z-10 pointer-events-none" />
 
