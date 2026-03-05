@@ -96,9 +96,27 @@ END:VCARD`;
                   <Mail className="w-6 h-6" />
                 </div>
                 <div>
-                  <h4 className="font-medium text-gray-900 text-lg mb-1">Email</h4>
+                  <h4 className="font-medium text-gray-900 text-lg mb-1">Email ordinace</h4>
                   <p className="text-gray-600 hover:text-primary transition-colors">
                     <a href="mailto:marta.rosnerova@gmail.com">marta.rosnerova@gmail.com</a>
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="bg-primary/10 p-3 rounded-full text-primary flex-shrink-0">
+                  <Mail className="w-6 h-6" />
+                </div>
+                <div>
+                  <h4 className="font-medium text-gray-900 text-lg mb-1">E-mail pro objednání (kontakt na sestru)</h4>
+                  <p className="text-gray-600 hover:text-primary transition-colors">
+                    <a href="mailto:ocni.fren@seznam.cz">ocni.fren@seznam.cz</a>
+                  </p>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Slouží k objednání k vyšetření a k žádostem o léky.
+                  </p>
+                  <p className="text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mt-2">
+                    Upozorňujeme, že uvedený e-mail neslouží k řešení neodkladných zdravotních problémů. V naléhavých případech volejte přímo na ordinaci nebo vyhledejte pohotovostní službu.
                   </p>
                 </div>
               </div>

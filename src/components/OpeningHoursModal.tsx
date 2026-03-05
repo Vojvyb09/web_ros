@@ -304,7 +304,8 @@ export function OpeningHoursModal({ isOpen: isOpenProp, onClose }: OpeningHoursM
                       Objednání
                     </h4>
                     <p className="text-sm text-gray-600 mb-3">
-                      K vyšetření je nutné se předem objednat telefonicky nebo e-mailem.
+                      K vyšetření je nutné se předem objednat telefonicky nebo e-mailem na{" "}
+                      <a href="mailto:ocni.fren@seznam.cz" className="text-primary font-medium hover:underline">ocni.fren@seznam.cz</a> (slouží také k žádostem o léky). Neodkladné problémy volejte na telefon.
                     </p>
                     <a
                       href="tel:+420734476654"
