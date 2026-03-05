@@ -36,6 +36,8 @@ END:VCARD`;
           src="/photo/back.jpg"
           alt=""
           className="w-full h-full object-cover"
+          loading="lazy"
+          decoding="async"
           aria-hidden
         />
         <div className="absolute inset-0 bg-white/85" />

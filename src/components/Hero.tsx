@@ -21,6 +21,7 @@ export function Hero() {
           src="/photo/main.jpg"
           alt="Pozadí ordinace"
           className="w-full h-full object-cover"
+          fetchPriority="high"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/60 to-transparent" />
       </div>

@@ -123,10 +123,12 @@ export function Gallery({ scrollToSlide = null, onScrolledTo }: GalleryProps) {
                       if (offset === 1) nextSlide();
                     }}
                   >
-                    <img 
-                      src={image.src} 
+                    <img
+                      src={image.src}
                       alt={image.alt}
                       className="w-full h-full object-cover"
+                      loading="lazy"
+                      decoding="async"
                     />
                   </motion.div>
                 );

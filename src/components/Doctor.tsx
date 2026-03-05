@@ -18,6 +18,8 @@ export function Doctor() {
                 src="https://picsum.photos/seed/doctor_marta/600/800"
                 alt="MUDr. Marta Rösnerová"
                 className="w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
               />
             </div>
             {/* Decorative background */}

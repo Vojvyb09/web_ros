@@ -19,6 +19,8 @@ export function About() {
               src="/photo/oklinice.jpg"
               alt="Oční ordinace MUDr. Marta Rösnerová"
               className="rounded-3xl shadow-2xl object-cover w-full h-[600px]"
+              loading="lazy"
+              decoding="async"
             />
           </motion.div>
 

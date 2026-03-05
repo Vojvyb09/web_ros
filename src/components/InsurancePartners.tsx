@@ -26,6 +26,8 @@ function LogoItem({ id, name, file }: { id: string; name: string; file: string }
           src={src}
           alt=""
           className="max-h-[56px] w-auto object-contain"
+          loading="lazy"
+          decoding="async"
           onError={() => setFailed(true)}
         />
       ) : (
