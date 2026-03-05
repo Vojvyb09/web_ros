@@ -4,13 +4,15 @@ import QRCode from "react-qr-code";
 export function Contact() {
   const mapUrl = "https://www.google.com/maps/search/?api=1&query=Dráhy+2189,+744+01+Frenštát+pod+Radhoštěm";
   const phoneUrl = "tel:+420734476654";
+  const landlineUrl = "tel:+420556836953";
   
   const vCardData = `BEGIN:VCARD
 VERSION:3.0
 N:Rösnerová;Marta;;MUDr.;
 FN:MUDr. Marta Rösnerová
 ORG:Oční ordinace MUDr. Marta Rösnerová
-TEL;TYPE=WORK,VOICE:+420734476654
+TEL;TYPE=WORK,CELL:+420734476654
+TEL;TYPE=WORK,VOICE:+420556836953
 EMAIL;TYPE=WORK:marta.rosnerova@gmail.com
 ADR;TYPE=WORK:;;Dráhy 2189;Frenštát pod Radhoštěm;;744 01;Czech Republic
 END:VCARD`;
@@ -85,7 +87,10 @@ END:VCARD`;
                 <div>
                   <h4 className="font-medium text-gray-900 text-lg mb-1">Telefon</h4>
                   <p className="text-gray-600 hover:text-primary transition-colors">
-                    <a href={phoneUrl}>+420 734 476 654</a>
+                    <a href={phoneUrl}>+420 734 476 654</a> (mobil)
+                  </p>
+                  <p className="text-gray-600 hover:text-primary transition-colors mt-0.5">
+                    <a href={landlineUrl}>+420 556 836 953</a> (pevná linka)
                   </p>
                   <p className="text-sm text-gray-500 mt-1">Po-Pá: 8:00 - 18:00</p>
                 </div>

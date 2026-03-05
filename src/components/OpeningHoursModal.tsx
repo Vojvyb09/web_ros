@@ -307,13 +307,22 @@ export function OpeningHoursModal({ isOpen: isOpenProp, onClose }: OpeningHoursM
                       K vyšetření je nutné se předem objednat telefonicky nebo e-mailem na{" "}
                       <a href="mailto:ocni.fren@seznam.cz" className="text-primary font-medium hover:underline">ocni.fren@seznam.cz</a> (slouží také k žádostem o léky). Neodkladné problémy volejte na telefon.
                     </p>
-                    <a
-                      href="tel:+420734476654"
-                      className="flex items-center justify-center gap-2 w-full bg-white border border-gray-200 text-gray-900 py-2 rounded-lg hover:border-primary hover:text-primary transition-colors font-medium text-sm"
-                    >
-                      <Phone className="w-4 h-4" />
-                      +420 734 476 654
-                    </a>
+                    <div className="flex flex-col gap-2">
+                      <a
+                        href="tel:+420734476654"
+                        className="flex items-center justify-center gap-2 w-full bg-white border border-gray-200 text-gray-900 py-2 rounded-lg hover:border-primary hover:text-primary transition-colors font-medium text-sm"
+                      >
+                        <Phone className="w-4 h-4" />
+                        +420 734 476 654 (mobil)
+                      </a>
+                      <a
+                        href="tel:+420556836953"
+                        className="flex items-center justify-center gap-2 w-full bg-white border border-gray-200 text-gray-900 py-2 rounded-lg hover:border-primary hover:text-primary transition-colors font-medium text-sm"
+                      >
+                        <Phone className="w-4 h-4" />
+                        +420 556 836 953 (pevná linka)
+                      </a>
+                    </div>
                   </div>
 
                   <button
