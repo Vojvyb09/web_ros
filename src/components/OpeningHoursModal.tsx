@@ -32,6 +32,13 @@ interface OpeningHours {
   /** Platné do (YYYY-MM-DD) – po tomto datu se zobrazí běžné okno. */
   closedUntil?: string;
   replacements?: Replacement[];
+  perimetryMonday?: string;
+  perimetryTuesday?: string;
+  perimetryWednesday?: string;
+  perimetryThursday?: string;
+  perimetryFriday?: string;
+  perimetrySaturday?: string;
+  perimetrySunday?: string;
 }
 
 function hasReplacementContent(r: Replacement) {
@@ -253,6 +260,43 @@ export function OpeningHoursModal({ isOpen: isOpenProp, onClose }: OpeningHoursM
                       <p className="text-xs text-gray-500 mt-3 italic">{hours.note}</p>
                     )}
                   </div>
+
+                  {[
+                    { day: "Pondělí", value: hours.perimetryMonday },
+                    { day: "Úterý", value: hours.perimetryTuesday },
+                    { day: "Středa", value: hours.perimetryWednesday },
+                    { day: "Čtvrtek", value: hours.perimetryThursday },
+                    { day: "Pátek", value: hours.perimetryFriday },
+                    { day: "Sobota", value: hours.perimetrySaturday },
+                    { day: "Neděle", value: hours.perimetrySunday },
+                  ].filter(({ value }) => (value ?? "").trim()).length > 0 && (
+                    <div className="mb-8">
+                      <h3 className="flex items-center gap-2 text-lg font-medium text-gray-900 mb-4">
+                        <Clock className="w-5 h-5 text-primary" />
+                        Perimetrie
+                      </h3>
+                      <div className="space-y-3">
+                        {[
+                          { day: "Pondělí", value: hours.perimetryMonday },
+                          { day: "Úterý", value: hours.perimetryTuesday },
+                          { day: "Středa", value: hours.perimetryWednesday },
+                          { day: "Čtvrtek", value: hours.perimetryThursday },
+                          { day: "Pátek", value: hours.perimetryFriday },
+                          { day: "Sobota", value: hours.perimetrySaturday },
+                          { day: "Neděle", value: hours.perimetrySunday },
+                        ]
+                          .filter(({ value }) => (value ?? "").trim())
+                          .map(({ day, value }) => (
+                            <div key={day} className="border-b border-gray-100 pb-2">
+                              <div className="flex justify-between items-center">
+                                <span className="text-gray-600">{day}</span>
+                                <span className="font-medium text-gray-900">{value}</span>
+                              </div>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  )}
 
                   <div className="bg-gray-50 rounded-xl p-4 border border-gray-100 mb-6">
                     <h4 className="font-medium text-gray-900 mb-2 flex items-center gap-2">

@@ -35,6 +35,14 @@ interface OpeningHours {
   replacements?: Replacement[];
   /** Předvyplnění – seznam doktorů pro výběr v náhradě (ukládají se i nově zadaní). */
   savedReplacementDoctors?: Replacement[];
+  /** Perimetrie – ordinační doba pro perimetrie (ÚT, ČT atd.). */
+  perimetryMonday?: string;
+  perimetryTuesday?: string;
+  perimetryWednesday?: string;
+  perimetryThursday?: string;
+  perimetryFriday?: string;
+  perimetrySaturday?: string;
+  perimetrySunday?: string;
 }
 
 export function AdminPanel() {
@@ -89,6 +97,13 @@ export function AdminPanel() {
             : (Array.isArray(data.replacements) && data.replacements.length > 0
                 ? data.replacements.map((r: Replacement) => ({ name: r.name ?? "", contact: r.contact ?? "", address: r.address ?? "" }))
                 : []),
+          perimetryMonday: data.perimetryMonday ?? "",
+          perimetryTuesday: data.perimetryTuesday ?? "",
+          perimetryWednesday: data.perimetryWednesday ?? "",
+          perimetryThursday: data.perimetryThursday ?? "",
+          perimetryFriday: data.perimetryFriday ?? "",
+          perimetrySaturday: data.perimetrySaturday ?? "",
+          perimetrySunday: data.perimetrySunday ?? "",
         });
         setLoading(false);
       })
@@ -266,6 +281,33 @@ export function AdminPanel() {
                   </div>
                 );
               })}
+            </div>
+
+            <div className="border-t border-gray-200 pt-6">
+              <h3 className="text-lg font-medium text-gray-900 mb-3">Perimetrie</h3>
+              <p className="text-sm text-gray-500 mb-4">Ordinační doba pro perimetrie (vyplňte jen dny, kdy jsou vyhrazené).</p>
+              <div className="grid md:grid-cols-2 gap-4">
+                {[
+                  { key: "perimetryMonday" as const, label: "Pondělí" },
+                  { key: "perimetryTuesday" as const, label: "Úterý" },
+                  { key: "perimetryWednesday" as const, label: "Středa" },
+                  { key: "perimetryThursday" as const, label: "Čtvrtek" },
+                  { key: "perimetryFriday" as const, label: "Pátek" },
+                  { key: "perimetrySaturday" as const, label: "Sobota" },
+                  { key: "perimetrySunday" as const, label: "Neděle" },
+                ].map(({ key, label }) => (
+                  <div key={key}>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+                    <input
+                      type="text"
+                      value={String(hours[key] ?? "")}
+                      onChange={(e) => setHours({ ...hours, [key]: e.target.value })}
+                      placeholder="např. 7:00-7:30 12:30-13:00"
+                      className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 outline-none"
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl border border-gray-100">

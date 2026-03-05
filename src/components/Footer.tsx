@@ -18,6 +18,13 @@ interface OpeningHours {
   saturdayBreak?: string;
   sundayBreak?: string;
   note?: string;
+  perimetryMonday?: string;
+  perimetryTuesday?: string;
+  perimetryWednesday?: string;
+  perimetryThursday?: string;
+  perimetryFriday?: string;
+  perimetrySaturday?: string;
+  perimetrySunday?: string;
 }
 
 export function Footer() {
@@ -120,6 +127,35 @@ export function Footer() {
                 <li className="text-xs italic text-gray-500 pt-1 border-t border-gray-700 mt-2">
                   {hours.note}
                 </li>
+              )}
+              {hours && [
+                { label: "Pondělí", value: hours.perimetryMonday },
+                { label: "Úterý", value: hours.perimetryTuesday },
+                { label: "Středa", value: hours.perimetryWednesday },
+                { label: "Čtvrtek", value: hours.perimetryThursday },
+                { label: "Pátek", value: hours.perimetryFriday },
+                { label: "Sobota", value: hours.perimetrySaturday },
+                { label: "Neděle", value: hours.perimetrySunday },
+              ].filter(({ value }) => (value ?? "").trim()).length > 0 && (
+                <>
+                  <li className="text-sm font-medium pt-3 mt-2 border-t border-gray-700">Perimetrie</li>
+                  {[
+                    { label: "Pondělí", value: hours.perimetryMonday },
+                    { label: "Úterý", value: hours.perimetryTuesday },
+                    { label: "Středa", value: hours.perimetryWednesday },
+                    { label: "Čtvrtek", value: hours.perimetryThursday },
+                    { label: "Pátek", value: hours.perimetryFriday },
+                    { label: "Sobota", value: hours.perimetrySaturday },
+                    { label: "Neděle", value: hours.perimetrySunday },
+                  ]
+                    .filter(({ value }) => (value ?? "").trim())
+                    .map(({ label, value }) => (
+                      <li key={label} className="flex justify-between text-gray-400">
+                        <span>{label}</span>
+                        <span>{value}</span>
+                      </li>
+                    ))}
+                </>
               )}
             </ul>
           </div>

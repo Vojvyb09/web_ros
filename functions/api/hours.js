@@ -14,6 +14,13 @@ const DEFAULT_HOURS = JSON.stringify({
   closedUntil: "",
   replacements: [],
   savedReplacementDoctors: [],
+  perimetryMonday: "",
+  perimetryTuesday: "7:00-7:30 12:30-13:00",
+  perimetryWednesday: "",
+  perimetryThursday: "7:00-7:30 13:00-14:00",
+  perimetryFriday: "",
+  perimetrySaturday: "",
+  perimetrySunday: "",
 });
 
 const JSON_HEADERS = { "Content-Type": "application/json" };
