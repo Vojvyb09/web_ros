@@ -173,12 +173,12 @@ export function Services() {
                   >
                     <div className="flex flex-col md:flex-row gap-5 md:gap-6 items-start">
                       {item.image && (
-                        <div className="w-full md:w-[42%] flex-shrink-0">
-                          <div className="rounded-xl overflow-hidden bg-gray-50 aspect-[4/3] flex items-center justify-center">
+                        <div className="w-full md:w-[40%] flex-shrink-0">
+                          <div className="rounded-xl overflow-hidden border border-gray-100 w-full aspect-[4/3] bg-gray-50">
                             <img
                               src={item.image}
                               alt=""
-                              className="w-full h-full object-contain p-1"
+                              className="w-full h-full object-cover object-center"
                             />
                           </div>
                         </div>
