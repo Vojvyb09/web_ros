@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Stethoscope, Cpu, Heart, Sparkles, X, ExternalLink, ImageIcon } from "lucide-react";
+import { Stethoscope, Cpu, Heart, Sparkles, X, ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getGalleryIndexForImage } from "@/components/Gallery";
 
@@ -8,8 +8,6 @@ type EquipmentItem = {
   title: string;
   intro: string;
   points: string[];
-  linkLabel?: string;
-  linkUrl?: string;
   /** Cesta k fotce v galerii (např. /photo/pristroj_1.jpg) – tlačítko „Ukázat v galerii“ přepne na tento snímek */
   galleryImage?: string;
 };
@@ -30,8 +28,6 @@ const EQUIPMENT_MODAL: ModalContent = {
         "Výsledek ukáže, zda nějaká část zorného pole nechybí nebo je oslabená – důležité např. u zeleného zákalu (glaukomu) nebo u některých neurologických potíží.",
         "Přístroj automaticky kontroluje, zda pacient během vyšetření správně fixuje pohled, takže výsledky jsou spolehlivé.",
       ],
-      linkLabel: "Technické informace o perimetru PTS 920 (výrobce)",
-      linkUrl: "https://www.cmi.sk/cs/diagnostika/automaticky-pocitacovy-perimetr-pts/",
       galleryImage: "/photo/pristroj_1.jpg",
     },
     {
@@ -43,8 +39,6 @@ const EQUIPMENT_MODAL: ModalContent = {
         "Nitrooční tlak – klíčový údaj u zeleného zákalu (glaukomu); měření je rychlé a šetrné.",
         "Tloušťka rohovky – doplňuje vyšetření oka a zvyšuje přesnost měření tlaku.",
       ],
-      linkLabel: "Více o přístroji TRK-2P (výrobce)",
-      linkUrl: "https://www.ocni.eu/pristroje/auto-kerato-refrakto-tono-pachymetr-trk-2p-topcon",
       galleryImage: "/photo/pristroj_3.jpg",
     },
   ],
@@ -200,29 +194,16 @@ export function Services({ onShowInGallery }: ServicesProps) {
                             </li>
                           ))}
                         </ul>
-                        <div className="flex flex-wrap gap-3 items-center">
-                          {item.galleryImage && onShowInGallery && (
-                            <button
-                              type="button"
-                              onClick={() => handleShowInGallery(item.galleryImage)}
-                              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 text-primary font-medium text-sm hover:bg-primary/20 transition-colors"
-                            >
-                              <ImageIcon className="w-4 h-4" />
-                              Ukázat v galerii
-                            </button>
-                          )}
-                          {item.linkUrl && (
-                            <a
-                              href={item.linkUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-2 text-primary font-medium text-sm hover:underline"
-                            >
-                              <ExternalLink className="w-4 h-4" />
-                              {item.linkLabel ?? "Více informací"}
-                            </a>
-                          )}
-                        </div>
+                        {item.galleryImage && onShowInGallery && (
+                          <button
+                            type="button"
+                            onClick={() => handleShowInGallery(item.galleryImage)}
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 text-primary font-medium text-sm hover:bg-primary/20 transition-colors"
+                          >
+                            <ImageIcon className="w-4 h-4" />
+                            Ukázat v galerii
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
