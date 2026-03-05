@@ -6,6 +6,7 @@ import { About } from "@/components/About";
 import { Gallery } from "@/components/Gallery";
 import { Doctor } from "@/components/Doctor";
 import { Testimonials } from "@/components/Testimonials";
+import { InsurancePartners } from "@/components/InsurancePartners";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import { OpeningHoursModal } from "@/components/OpeningHoursModal";
@@ -31,6 +32,7 @@ export function Home() {
         <Gallery />
         <Doctor />
         <Testimonials />
+        <InsurancePartners />
         <Contact />
       </main>
       <Footer />

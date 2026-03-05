@@ -30,3 +30,12 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-serif);
 }
+
+@keyframes scroll-insurance {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-scroll-insurance {
+  animation: scroll-insurance 30s linear infinite;
+}
