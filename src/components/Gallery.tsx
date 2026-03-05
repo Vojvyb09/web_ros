@@ -4,14 +4,14 @@ import { ChevronLeft, ChevronRight, Camera } from "lucide-react";
 import { SectionDivider } from "@/components/SectionDivider";
 import { cn } from "@/lib/utils";
 
-/** Fotky ze složky public/photo – titulky a popisky odpovídají obsahu snímků */
+/** Fotky ze složky public/photo – čistá galerie bez textu na snímcích */
 const images = [
-  { src: "/photo/cekarna.jpg", alt: "Čekárna", title: "Čekárna", description: "Klidné prostředí, kde na vás počkáme před vyšetřením." },
-  { src: "/photo/ordinace_main.jpg", alt: "Hlavní ordinace", title: "Hlavní ordinace", description: "Prostor pro komplexní oční vyšetření a konzultace." },
-  { src: "/photo/pristroj_1.jpg", alt: "Diagnostický přístroj", title: "Diagnostická technika", description: "Přesné přístroje pro vyšetření předního segmentu oka a zrakové ostrosti." },
-  { src: "/photo/pristorj_2.jpg", alt: "Vyšetřovna", title: "Vyšetřovna", description: "Šetrné a důkladné vyšetření v příjemném prostředí." },
-  { src: "/photo/pristroj_3.jpg", alt: "Oční přístroje", title: "Přístrojové vybavení", description: "Moderní technika pro diagnostiku i sledování průběhu léčby." },
-  { src: "/photo/pristroj_4.jpg", alt: "Ordinace", title: "Ordinace", description: "Čisté a přehledné pracoviště pro vaši oční péči." },
+  { src: "/photo/cekarna.jpg", alt: "Čekárna" },
+  { src: "/photo/ordinace_main.jpg", alt: "Hlavní ordinace" },
+  { src: "/photo/pristroj_1.jpg", alt: "Diagnostický přístroj" },
+  { src: "/photo/pristorj_2.jpg", alt: "Vyšetřovna" },
+  { src: "/photo/pristroj_3.jpg", alt: "Oční přístroje" },
+  { src: "/photo/pristroj_4.jpg", alt: "Ordinace" },
 ];
 
 export function Gallery() {
@@ -105,14 +105,6 @@ export function Gallery() {
                       alt={image.alt}
                       className="w-full h-full object-cover"
                     />
-                    
-                    {/* Caption for active slide */}
-                    {offset === 0 && (
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-8 text-left">
-                        <h3 className="text-2xl font-serif font-medium mb-2">{image.title}</h3>
-                        <p className="text-gray-300">{image.description}</p>
-                      </div>
-                    )}
                   </motion.div>
                 );
               })}

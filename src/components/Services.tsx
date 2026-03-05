@@ -139,67 +139,78 @@ export function Services() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setOpenIndex(null)}
-              className="fixed inset-0 bg-black/50 z-40"
+              className="fixed inset-0 bg-black/40 z-40"
               aria-hidden
             />
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.2 }}
-              className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg max-h-[85vh] overflow-y-auto bg-white rounded-2xl shadow-xl z-50 mx-4 p-6 md:p-8"
+              exit={{ opacity: 0, scale: 0.97 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-gray-50 rounded-3xl shadow-xl z-50 mx-4 p-6 md:p-10 border border-gray-100"
               role="dialog"
               aria-modal="true"
               aria-labelledby="service-modal-title"
             >
-              <div className="flex justify-between items-start gap-4 mb-5">
-                <h3 id="service-modal-title" className="text-xl font-serif font-medium text-gray-900 pr-8">
+              <div className="flex justify-between items-center gap-4 mb-8">
+                <h3 id="service-modal-title" className="text-xl font-serif font-medium text-gray-800">
                   {content.modalTitle}
                 </h3>
                 <button
                   type="button"
                   onClick={() => setOpenIndex(null)}
-                  className="p-2 rounded-full hover:bg-gray-100 text-gray-500 hover:text-gray-700 transition-colors"
+                  className="p-2 rounded-full hover:bg-white/80 text-gray-500 hover:text-gray-700 transition-colors"
                   aria-label="Zavřít"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
-              <div className="space-y-8">
+              <div className="space-y-10">
                 {content.equipment.map((item, idx) => (
-                  <div key={idx} className={idx > 0 ? "pt-6 border-t border-gray-100" : ""}>
-                    <h4 className="font-medium text-gray-900 mb-2">{item.title}</h4>
-                    {item.image && (
-                      <div className="rounded-xl overflow-hidden border border-gray-100 mb-3 bg-gray-50">
-                        <img
-                          src={item.image}
-                          alt=""
-                          className="w-full h-auto max-h-48 object-contain"
-                        />
+                  <div
+                    key={idx}
+                    className="bg-white rounded-2xl p-5 md:p-6 shadow-sm border border-gray-100/80 overflow-hidden"
+                  >
+                    <div className="flex flex-col md:flex-row gap-5 md:gap-6 items-start">
+                      {item.image && (
+                        <div className="w-full md:w-[42%] flex-shrink-0">
+                          <div className="rounded-xl overflow-hidden bg-gray-50 aspect-[4/3] flex items-center justify-center">
+                            <img
+                              src={item.image}
+                              alt=""
+                              className="w-full h-full object-contain p-1"
+                            />
+                          </div>
+                        </div>
+                      )}
+                      <div className={item.image ? "flex-1 min-w-0" : ""}>
+                        <h4 className="font-medium text-gray-900 mb-2 text-base md:text-lg">
+                          {item.title}
+                        </h4>
+                        <p className="text-gray-600 text-sm leading-relaxed mb-4">
+                          {item.intro}
+                        </p>
+                        <ul className="space-y-2 mb-4">
+                          {item.points.map((point, i) => (
+                            <li key={i} className="flex gap-2 text-gray-600 text-sm leading-relaxed">
+                              <span className="text-primary/70 mt-1 shrink-0">•</span>
+                              <span>{point}</span>
+                            </li>
+                          ))}
+                        </ul>
+                        {item.linkUrl && (
+                          <a
+                            href={item.linkUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 text-primary font-medium text-sm hover:underline"
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                            {item.linkLabel ?? "Více informací"}
+                          </a>
+                        )}
                       </div>
-                    )}
-                    <p className="text-gray-600 text-sm leading-relaxed mb-3">
-                      {item.intro}
-                    </p>
-                    <ul className="space-y-2 mb-3">
-                      {item.points.map((point, i) => (
-                        <li key={i} className="flex gap-2 text-gray-700 text-sm leading-relaxed">
-                          <span className="text-primary mt-1.5 shrink-0">•</span>
-                          <span>{point}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    {item.linkUrl && (
-                      <a
-                        href={item.linkUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-primary font-medium text-sm hover:underline"
-                      >
-                        <ExternalLink className="w-4 h-4" />
-                        {item.linkLabel ?? "Více informací"}
-                      </a>
-                    )}
+                    </div>
                   </div>
                 ))}
               </div>
