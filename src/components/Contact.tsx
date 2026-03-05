@@ -1,4 +1,4 @@
-import { MapPin, Phone, Mail, Clock, Navigation, Building2, Download } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, Navigation, Building2, Download, Banknote, CreditCard } from "lucide-react";
 import QRCode from "react-qr-code";
 
 export function Contact() {
@@ -131,6 +131,22 @@ END:VCARD`;
           {/* Pravý sloupec – Rychlá akce */}
           <div className="bg-white/60 backdrop-blur-sm p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100">
             <h4 className="font-medium text-gray-900 text-lg mb-5">Rychlá akce</h4>
+            <div className="mb-6 p-4 rounded-xl bg-white/80 border border-gray-100 shadow-sm">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="flex gap-2">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary" title="Hotovost">
+                    <Banknote className="h-5 w-5" />
+                  </span>
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-gray-600" title="Karta">
+                    <CreditCard className="h-5 w-5" />
+                  </span>
+                </div>
+                <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Platba</span>
+              </div>
+              <p className="text-sm text-gray-700">
+                Přijímáme hotovost i kartu. <span className="text-primary font-medium">Preferujeme platbu hotovostí.</span>
+              </p>
+            </div>
             <div className="flex flex-col gap-6">
               <div className="flex flex-wrap gap-4">
                 <div className="bg-white p-3 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center">
