@@ -9,6 +9,8 @@ type EquipmentItem = {
   points: string[];
   linkLabel?: string;
   linkUrl?: string;
+  /** Cesta k fotce přístroje (např. /photo/pristroj_1.jpg) */
+  image?: string;
 };
 
 type ModalContent = {
@@ -29,6 +31,7 @@ const EQUIPMENT_MODAL: ModalContent = {
       ],
       linkLabel: "Technické informace o perimetru PTS 920 (výrobce)",
       linkUrl: "https://www.cmi.sk/cs/diagnostika/automaticky-pocitacovy-perimetr-pts/",
+      image: "/photo/pristroj_1.jpg",
     },
     {
       title: "TRK-2P Auto Kerato-Refracto-Tonometer – čtyři vyšetření v jednom",
@@ -41,6 +44,7 @@ const EQUIPMENT_MODAL: ModalContent = {
       ],
       linkLabel: "Více o přístroji TRK-2P (výrobce)",
       linkUrl: "https://www.ocni.eu/pristroje/auto-kerato-refrakto-tono-pachymetr-trk-2p-topcon",
+      image: "/photo/pristroj_3.jpg",
     },
   ],
 };
@@ -165,6 +169,15 @@ export function Services() {
                 {content.equipment.map((item, idx) => (
                   <div key={idx} className={idx > 0 ? "pt-6 border-t border-gray-100" : ""}>
                     <h4 className="font-medium text-gray-900 mb-2">{item.title}</h4>
+                    {item.image && (
+                      <div className="rounded-xl overflow-hidden border border-gray-100 mb-3 bg-gray-50">
+                        <img
+                          src={item.image}
+                          alt=""
+                          className="w-full h-auto max-h-48 object-contain"
+                        />
+                      </div>
+                    )}
                     <p className="text-gray-600 text-sm leading-relaxed mb-3">
                       {item.intro}
                     </p>
