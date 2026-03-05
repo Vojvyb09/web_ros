@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ChevronLeft, ChevronRight, Camera } from "lucide-react";
 import { SectionDivider } from "@/components/SectionDivider";
 import { cn } from "@/lib/utils";
 
 /** Fotky ze složky public/photo – čistá galerie bez textu na snímcích */
-const images = [
+export const GALLERY_IMAGES = [
   { src: "/photo/cekarna.jpg", alt: "Čekárna" },
   { src: "/photo/ordinace_main.jpg", alt: "Hlavní ordinace" },
   { src: "/photo/pristroj_1.jpg", alt: "Diagnostický přístroj" },
@@ -14,8 +14,23 @@ const images = [
   { src: "/photo/pristroj_4.jpg", alt: "Ordinace" },
 ];
 
-export function Gallery() {
-  const [currentIndex, setCurrentIndex] = useState(1); // Start with the second image centered
+/** Index snímku v galerii podle cesty k souboru (pro propojení ze sekce Služby) */
+export function getGalleryIndexForImage(src: string): number {
+  const i = GALLERY_IMAGES.findIndex((img) => img.src === src);
+  return i >= 0 ? i : 0;
+}
+
+interface GalleryProps {
+  /** Po nastavení přepne carousel na tento snímek (např. po kliku „Ukázat v galerii“) */
+  scrollToSlide?: number | null;
+  /** Volá se po přepnutí na scrollToSlide */
+  onScrolledTo?: () => void;
+}
+
+export function Gallery({ scrollToSlide = null, onScrolledTo }: GalleryProps) {
+  const [currentIndex, setCurrentIndex] = useState(1);
+
+  const images = GALLERY_IMAGES;
 
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev + 1) % images.length);
@@ -28,6 +43,14 @@ export function Gallery() {
   const getSlideIndex = (offset: number) => {
     return (currentIndex + offset + images.length) % images.length;
   };
+
+  // Když rodič pošle scrollToSlide, přepneme na ten snímek
+  useEffect(() => {
+    if (scrollToSlide != null && scrollToSlide >= 0 && scrollToSlide < images.length) {
+      setCurrentIndex(scrollToSlide);
+      onScrolledTo?.();
+    }
+  }, [scrollToSlide, images.length, onScrolledTo]);
 
   return (
     <section id="gallery" className="py-24 bg-gray-900 text-white relative overflow-hidden">

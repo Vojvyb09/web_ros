@@ -14,11 +14,19 @@ import { OpeningHoursIndicator } from "@/components/OpeningHoursIndicator";
 
 export function Home() {
   const [hoursModalOpen, setHoursModalOpen] = useState(false);
+  const [gallerySlideTo, setGallerySlideTo] = useState<number | null>(null);
 
   useEffect(() => {
     const t = setTimeout(() => setHoursModalOpen(true), 1000);
     return () => clearTimeout(t);
   }, []);
+
+  const handleShowInGallery = (slideIndex: number) => {
+    setGallerySlideTo(slideIndex);
+    setTimeout(() => {
+      document.getElementById("gallery")?.scrollIntoView({ behavior: "smooth" });
+    }, 50);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans text-gray-900">
@@ -27,9 +35,9 @@ export function Home() {
       <Navbar />
       <main>
         <Hero />
-        <Services />
+        <Services onShowInGallery={handleShowInGallery} />
         <About />
-        <Gallery />
+        <Gallery scrollToSlide={gallerySlideTo} onScrolledTo={() => setGallerySlideTo(null)} />
         <Doctor />
         <Testimonials />
         <InsurancePartners />

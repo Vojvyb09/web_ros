@@ -1,7 +1,8 @@
 import { useState, type ReactNode } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Stethoscope, Cpu, Heart, Sparkles, X, ExternalLink } from "lucide-react";
+import { Stethoscope, Cpu, Heart, Sparkles, X, ExternalLink, ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getGalleryIndexForImage } from "@/components/Gallery";
 
 type EquipmentItem = {
   title: string;
@@ -9,8 +10,8 @@ type EquipmentItem = {
   points: string[];
   linkLabel?: string;
   linkUrl?: string;
-  /** Cesta k fotce přístroje (např. /photo/pristroj_1.jpg) */
-  image?: string;
+  /** Cesta k fotce v galerii (např. /photo/pristroj_1.jpg) – tlačítko „Ukázat v galerii“ přepne na tento snímek */
+  galleryImage?: string;
 };
 
 type ModalContent = {
@@ -31,7 +32,7 @@ const EQUIPMENT_MODAL: ModalContent = {
       ],
       linkLabel: "Technické informace o perimetru PTS 920 (výrobce)",
       linkUrl: "https://www.cmi.sk/cs/diagnostika/automaticky-pocitacovy-perimetr-pts/",
-      image: "/photo/pristroj_1.jpg",
+      galleryImage: "/photo/pristroj_1.jpg",
     },
     {
       title: "TRK-2P Auto Kerato-Refracto-Tonometer – čtyři vyšetření v jednom",
@@ -44,7 +45,7 @@ const EQUIPMENT_MODAL: ModalContent = {
       ],
       linkLabel: "Více o přístroji TRK-2P (výrobce)",
       linkUrl: "https://www.ocni.eu/pristroje/auto-kerato-refrakto-tono-pachymetr-trk-2p-topcon",
-      image: "/photo/pristroj_3.jpg",
+      galleryImage: "/photo/pristroj_3.jpg",
     },
   ],
 };
@@ -81,9 +82,21 @@ const services: Array<{
   },
 ];
 
-export function Services() {
+interface ServicesProps {
+  /** Po kliku na „Ukázat v galerii“ – přepne galerii na snímek a posune stránku */
+  onShowInGallery?: (slideIndex: number) => void;
+}
+
+export function Services({ onShowInGallery }: ServicesProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const content = openIndex !== null ? services[openIndex]?.modal : null;
+
+  const handleShowInGallery = (galleryImage: string | undefined) => {
+    if (!galleryImage) return;
+    const index = getGalleryIndexForImage(galleryImage);
+    setOpenIndex(null);
+    onShowInGallery?.(index);
+  };
 
   return (
     <section id="services" className="py-24 bg-white">
@@ -171,19 +184,8 @@ export function Services() {
                     key={idx}
                     className="bg-white rounded-2xl p-5 md:p-6 shadow-sm border border-gray-100/80 overflow-hidden"
                   >
-                    <div className="flex flex-col md:flex-row gap-5 md:gap-6 items-start">
-                      {item.image && (
-                        <div className="w-full md:w-[40%] flex-shrink-0">
-                          <div className="rounded-xl overflow-hidden border border-gray-100 w-full aspect-[4/3] bg-gray-50">
-                            <img
-                              src={item.image}
-                              alt=""
-                              className="w-full h-full object-cover object-center"
-                            />
-                          </div>
-                        </div>
-                      )}
-                      <div className={item.image ? "flex-1 min-w-0" : ""}>
+                    <div className="flex flex-col gap-5 md:gap-6">
+                      <div>
                         <h4 className="font-medium text-gray-900 mb-2 text-base md:text-lg">
                           {item.title}
                         </h4>
@@ -198,17 +200,29 @@ export function Services() {
                             </li>
                           ))}
                         </ul>
-                        {item.linkUrl && (
-                          <a
-                            href={item.linkUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 text-primary font-medium text-sm hover:underline"
-                          >
-                            <ExternalLink className="w-4 h-4" />
-                            {item.linkLabel ?? "Více informací"}
-                          </a>
-                        )}
+                        <div className="flex flex-wrap gap-3 items-center">
+                          {item.galleryImage && onShowInGallery && (
+                            <button
+                              type="button"
+                              onClick={() => handleShowInGallery(item.galleryImage)}
+                              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 text-primary font-medium text-sm hover:bg-primary/20 transition-colors"
+                            >
+                              <ImageIcon className="w-4 h-4" />
+                              Ukázat v galerii
+                            </button>
+                          )}
+                          {item.linkUrl && (
+                            <a
+                              href={item.linkUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 text-primary font-medium text-sm hover:underline"
+                            >
+                              <ExternalLink className="w-4 h-4" />
+                              {item.linkLabel ?? "Více informací"}
+                            </a>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
